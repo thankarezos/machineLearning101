@@ -11,14 +11,12 @@ def linearSeparated(n):
 
     X = np.hstack((X, labels.reshape(-1, 1))) 
     np.random.shuffle(X)  # Shuffle the rows of X
+    return X
 
+
+def splitData(X):
     X_train, X_test = np.split(X, 2)
-
-    saveData(X_train, 'train')
-    saveData(X_test, 'test', False)
-
     return X_train[:, :-1], X_train[:, -1], X_test[:, :-1], X_test[:, -1]
-
 
 
 def saveData(X, filename, labels=True):

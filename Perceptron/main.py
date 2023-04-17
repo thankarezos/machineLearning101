@@ -21,16 +21,6 @@ def main():
     "5. Μη Γραμμικά Διαχωρίσιμα Πρότυπα, Κλάση 0 μέσα στην Κλάση 1\n" +
     "6. Τέλος"
     )
-    
-    # while True:
-    #     try:
-    #         n = int(input("Εισάγετε τον αριθμό των σημείων (πρέπει να είναι πολλαπλάσιο του 8): "))
-    #         if n != "" and int(n) % 8 != 0:
-    #             print("Ο αριθμός πρέπει να είναι πολλαπλάσιο του 8. Δοκιμάστε το", ((int(n)//8)+1)*8, "την επόμενη φορά.")
-    #         else:
-    #             break
-    #     except ValueError:
-    #         print("Invalid input! Please enter an integer.")
 
 
     option = None
