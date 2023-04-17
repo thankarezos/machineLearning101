@@ -1,30 +1,23 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 from percetron import Perceptron
 
-# Generate some random data
-low1=0.0
-high1=0.3
-low2=0.7
-high2=0.9
-
-n = 500
-X_0 = np.random.uniform(low=low1, high=high1, size=(int(n/2), 2))
-X_1 = np.random.uniform(low=low2, high=high2, size=(int(n/2), 2))
-X = np.concatenate((X_0, X_1), axis=0)
-labels = np.concatenate((np.zeros(len(X_0)), np.ones(len(X_1))))
+#import train data
+data = pd.read_excel('train.xlsx')
+X = data[['X', 'Y']].values
+labels = data['labels'].values
 
 # Create a perceptron and fit the data
 perceptron = Perceptron(learning_rate=0.1, num_epochs=100)
 perceptron.fit(X, labels)
 
-# Make some predictions
+
+#import test data
+data = pd.read_excel('test.xlsx')
+X_test = data[['X', 'Y']].values
 
 # Make some predictions
-X_0_test = np.random.uniform(low=low1, high=high1, size=(int(n/2), 2)) # Class 0 patterns with x and y in [0.0, 0.3]
-X_1_test = np.random.uniform(low=low2, high=high2, size=(int(n/2), 2))  # Class 1 patterns with x and y in [0.7, 0.9]
-X_test = np.concatenate((X_0_test, X_1_test), axis=0)
-
 y_pred = perceptron.predict(X_test)
 
 # Plot the results
