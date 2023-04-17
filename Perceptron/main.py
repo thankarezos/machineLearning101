@@ -4,10 +4,15 @@ import train as tr
 
 def main():
     n = None
-    while not n or (n != "" and int(n) % 8 != 0):
-        n = int(input("Εισάγετε τον αριθμό των σημείων (πρέπει να είναι πολλαπλάσιο του 8): "))
-        if n != "" and n % 8 != 0:
-            print("Ο αριθμός πρέπει να είναι πολλαπλάσιο του 8. Δοκιμάστε το", ((int(n)//8)+1)*8, "την επόμενη φορά.")
+    while True:
+        try:
+            n = int(input("Εισάγετε τον αριθμό των σημείων (πρέπει να είναι πολλαπλάσιο του 8): "))
+            if n != "" and int(n) % 8 != 0:
+                print("Ο αριθμός πρέπει να είναι πολλαπλάσιο του 8. Δοκιμάστε το", ((int(n)//8)+1)*8, "την επόμενη φορά.")
+            else:
+                break
+        except ValueError:
+            print("Invalid input! Please enter an integer.")
 
     print("1. Γραμμικά Διαχωρίσιμα Πρότυπα\n" +
     "2. Μη Γραμμικά Διαχωρίσιμα Πρότυπα – Κλάση 0 στη Γωνία\n" +
@@ -16,9 +21,24 @@ def main():
     "5. Μη Γραμμικά Διαχωρίσιμα Πρότυπα, Κλάση 0 μέσα στην Κλάση 1\n" +
     "6. Τέλος"
     )
+    
+    # while True:
+    #     try:
+    #         n = int(input("Εισάγετε τον αριθμό των σημείων (πρέπει να είναι πολλαπλάσιο του 8): "))
+    #         if n != "" and int(n) % 8 != 0:
+    #             print("Ο αριθμός πρέπει να είναι πολλαπλάσιο του 8. Δοκιμάστε το", ((int(n)//8)+1)*8, "την επόμενη φορά.")
+    #         else:
+    #             break
+    #     except ValueError:
+    #         print("Invalid input! Please enter an integer.")
+
+
     option = None
     while option not in range(1, 7):
-        option = int(input("Επιλέξτε έναν αριθμό από 1 έως 6: "))
+        try:
+            option = int(input("Επιλέξτε έναν αριθμό από 1 έως 6: "))
+        except ValueError:
+            print("Invalid input! Please enter an integer.")
 
     if option == 1:
         while True:
@@ -40,7 +60,7 @@ def main():
                     break
             except ValueError:
                 print("Invalid input! Please enter a number.")
-                
+
         tr.linearSeperated(n, num_epochs=num_epochs, learning_rate=lr)
 
 
