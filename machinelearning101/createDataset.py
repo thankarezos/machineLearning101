@@ -3,6 +3,7 @@ import pandas as pd
 
 
 def linearSeparated(n):
+    # np.random.seed(0)
     X_0 = np.random.uniform(low=0.0, high=0.3, size=(int(n/2), 2))  # Class 0 patterns with x and y in [0.0, 0.3]
     X_1 = np.random.uniform(low=0.7, high=0.9, size=(int(n/2), 2))  # Class 1 patterns with x and y in [0.7, 0.9]
 
