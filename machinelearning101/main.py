@@ -56,4 +56,5 @@ def main():
 
 
 if __name__ == "__main__":
+    print("Εργασία 1 - Μηχανική Μάθηση\n")
     main()
