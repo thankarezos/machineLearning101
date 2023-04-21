@@ -1,5 +1,6 @@
 import time
 from matplotlib import pyplot as plt
+from matplotlib.animation import FuncAnimation
 import numpy as np
 
 class Perceptron:
@@ -103,3 +104,84 @@ class Perceptron:
             plt.pause(0.1)
             time.sleep(0.1)
         plt.show()
+
+    def fit_plot2(self, X_train, y_train, X_test, ax, fig):
+
+        ax.set_xlim([-0.2, 1])
+        ax.set_ylim([-0.2, 1])
+        
+        line, = ax.plot([], [])
+
+        ax.set_title(f'Epoch ')
+        title = ax.text(0.1,0.85, "", bbox={'facecolor':'w', 'alpha':0.5, 'pad':5},
+                transform=ax.transAxes, ha="center")
+
+
+        # title = ax.set_title(f'Epoch ')
+        line, = ax.plot([], [])
+
+        # Define update function
+        def update(epoch):
+            # Fit the perceptron for one epoch
+            self.fit_epoch(X_train, y_train)
+
+            # Predict on X_test
+            y_pred = self.predict(X_test)
+
+            scatter = ax.scatter(X_test[:,0], X_test[:,1], c=y_pred)
+
+            # Update line plot
+            w1, w2 = self.weights
+            b = self.bias
+            x1 = np.linspace(-0.2, 1, 100)
+            x2 = -(w1*x1 + b) / w2
+            line.set_data(x1, x2)
+
+            # Set plot limits and title
+            title.set_text(f'Epoch {epoch+1}')
+
+            # Return plot elements to be updated
+            return scatter, line, title
+        anim = FuncAnimation(fig, update, frames=self.num_epochs, blit=True, interval=100)
+        
+        return anim
+
+        # Create animation
+
+    def fit_plot3(self, X_train, y_train, X_test, ax, fig):
+
+        ax.set_xlim([-0.2, 1])
+        ax.set_ylim([-0.2, 1])
+
+        line, = ax.plot([], [])
+
+        ax.set_title(f'Epoch ')
+        title = ax.text(0.1, 0.85, "", bbox={'facecolor': 'w', 'alpha': 0.5, 'pad': 5},
+                        transform=ax.transAxes, ha="center")
+
+        # Define update function
+        def update(epoch):
+            # Fit the perceptron for one epoch
+            self.fit_epoch(X_train, y_train)
+
+            # Predict on X_test
+            y_pred = self.predict(X_test)
+
+            scatter = ax.scatter(X_test[:, 0], X_test[:, 1], c=y_pred)
+
+            # Update line plot
+            w1, w2 = self.weights
+            b = self.bias
+            x1 = np.linspace(-0.2, 1, 100)
+            x2 = -(w1 * x1 + b) / w2
+            line.set_data(x1, x2)
+
+            # Set plot limits and title
+            title.set_text(f'Epoch {epoch + 1}')
+
+        # Return plot elements to be updated
+            return scatter, line, title
+        anim = FuncAnimation(fig, update, frames=self.num_epochs, blit=True, interval=100)
+        return anim 
+
+    # Create animation
