@@ -35,9 +35,14 @@ def linearSeperated(n, learning_rate, num_epochs):
     perceptron = Perceptron(learning_rate=learning_rate, num_epochs=num_epochs)
 
     # Call fit_plot2 and fit_plot3
-    fig, axs = plt.subplots(nrows=2, ncols=2)
+    fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(12, 8))
     anim1 = perceptron.fit_plot2(X_train, y_train, X_test, axs[0,0], fig)
     anim2 = perceptron.fit_plot3(X_train, y_train, X_test, axs[0,1], fig)
+
+    # fig3, ax3 = plt.subplots()
+    # fig4, ax4 = plt.subplots()
+    # anim3 = perceptron.fit_plot2(X_train, y_train, X_test, ax3, fig3)
+    # anim4 = perceptron.fit_plot3(X_train, y_train, X_test, ax4, fig4)
     
     plt.show()
 

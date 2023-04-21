@@ -116,7 +116,6 @@ class Perceptron:
         title = ax.text(0.1,0.85, "", bbox={'facecolor':'w', 'alpha':0.5, 'pad':5},
                 transform=ax.transAxes, ha="center")
 
-
         # title = ax.set_title(f'Epoch ')
         line, = ax.plot([], [])
 
@@ -183,5 +182,3 @@ class Perceptron:
             return scatter, line, title
         anim = FuncAnimation(fig, update, frames=self.num_epochs, blit=True, interval=100)
         return anim 
-
-    # Create animation
