@@ -29,6 +29,7 @@ def per_epoch(model, X_train, y_train, X_test, y_test):
     anim2 = pl.fit_plot2(model, X_train, y_train, X_test, axs[1], fig, active=True)
     anim3 = pl.fit_plot3(model, X_train, y_train, X_test, y_test, axs[2], fig, callback=True)
     plt.show()
+    print("test")
 
 def linearSeparated(n, model):
     X = cd.linearSeparated(n)
