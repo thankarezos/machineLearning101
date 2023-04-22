@@ -1,23 +1,30 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "name": "Main",
-        "type": "python",
-        "request": "launch",
-        "program": "machinelearning101/main.py",
-        "console": "integratedTerminal",
-        "justMyCode": true
-      },
-  
-      {
-        "name": "Python: Current File",
-        "type": "python",
-        "request": "launch",
-        "program": "${file}",
-        "console": "integratedTerminal",
-        "justMyCode": true
-      }
-    ]
-  }
-  
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Train",
+      "type": "python",
+      "request": "launch",
+      "program": "machinelearning101/train.py",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "Main",
+      "type": "python",
+      "request": "launch",
+      "program": "machinelearning101/main.py",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+
+    {
+      "name": "Python: Current File",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    }
+  ]
+}

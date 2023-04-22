@@ -1,19 +1,21 @@
 import time
 from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
+from matplotlib.colors import ListedColormap
 import numpy as np
 
 class Perceptron:
-    def __init__(self, learning_rate=0.1, num_epochs=100):
+    def __init__(self, learning_rate=0.1, num_epochs=100, callback=None):
         self.learning_rate = learning_rate
         self.num_epochs = num_epochs
         self.weights = None
         self.bias = None
+        self.callback = callback
+        self.training_finished = False
 
     def activation(self, x):
         return np.where(x >= 0, 1, 0)
     
-        
 
     def predict(self, X):
         # Compute linear output
@@ -23,6 +25,10 @@ class Perceptron:
         y_pred = np.array([self.activation(x) for x in linear_output])
 
         return y_pred
+    
+    def net_input(self, X):
+        # Compute the dot product between X and the weights, and add the bias
+        return np.dot(X, self.weights) + self.bias
 
     def fit(self, X, y):
         # Initialize weights and bias to 0
@@ -70,49 +76,23 @@ class Perceptron:
         plt.ylim(-0.2, 1)
         plt.plot(x1, x2)
         plt.show()
-    
-    def fit_plot(self, X_train, y_train, X_test):
-        fig, ax = plt.subplots()
 
-        for epoch in range(self.num_epochs):
-            # Fit the perceptron for one epoch
-            self.fit_epoch(X_train, y_train)
+    def fit_plot1(self, X_test, y_test, ax, title=None):
 
-            #predict
-            y_pred = self.predict(X_test)
+        ax.set_xlim([-0.2, 1])
+        ax.set_ylim([-0.2, 1])
 
-            ax.clear()
+        ax.set_title(title)
+        ax.scatter(X_test[:,0], X_test[:,1], c=y_test)
 
-
-            #scatter plot
-            ax.scatter(X_test[:,0], X_test[:,1], c=y_pred)
-
-            #plot line
-            w1, w2 = self.weights
-            b = self.bias
-            x1 = np.linspace(-0.2, 1, 100)
-            x2 = -(w1*x1 + b) / w2
-            ax.plot(x1, x2)
-
-            #plot settings
-            ax.set_xlim([-0.2, 1])
-            ax.set_ylim([-0.2, 1])
-            ax.set_title(f'Epoch {epoch+1}')
-
-            # Show the plot
-            plt.draw()
-            plt.pause(0.1)
-            time.sleep(0.1)
-        plt.show()
-
-    def fit_plot2(self, X_train, y_train, X_test, ax, fig):
+    def fit_plot2(self, X_train, y_train, X_test, ax, fig, title=None):
 
         ax.set_xlim([-0.2, 1])
         ax.set_ylim([-0.2, 1])
         
         line, = ax.plot([], [])
 
-        ax.set_title(f'Epoch ')
+        ax.set_title(title)
         title = ax.text(0.1,0.85, "", bbox={'facecolor':'w', 'alpha':0.5, 'pad':5},
                 transform=ax.transAxes, ha="center")
 
@@ -141,20 +121,35 @@ class Perceptron:
 
             # Return plot elements to be updated
             return scatter, line, title
-        anim = FuncAnimation(fig, update, frames=self.num_epochs, blit=True, interval=100)
-        
+        anim = FuncAnimation(fig, update, frames=self.num_epochs, blit=True, interval=100, repeat=False)
         return anim
-
-        # Create animation
-
-    def fit_plot3(self, X_train, y_train, X_test, ax, fig):
+    
+    def fit_plot2_static(self, X_test, ax, title=None):
 
         ax.set_xlim([-0.2, 1])
         ax.set_ylim([-0.2, 1])
 
-        line, = ax.plot([], [])
+        ax.set_title(title)
 
-        ax.set_title(f'Epoch ')
+        y_pred = self.predict(X_test)
+
+        ax.scatter(X_test[:,0], X_test[:,1], c=y_pred)
+
+        w1, w2 = self.weights
+        b = self.bias
+        x1 = np.linspace(-0.2, 1, 100)
+        x2 = -(w1*x1 + b) / w2
+        ax.plot(x1, x2)
+
+        # Create animation
+
+    def fit_plot3(self, X_train, y_train, X_test, y_test, ax, fig, title=None):
+
+        line, = ax.plot([], [])
+        # ax.set_ylim([-0.1, 1.1])
+        
+
+        ax.set_title(title)
         title = ax.text(0.1, 0.85, "", bbox={'facecolor': 'w', 'alpha': 0.5, 'pad': 5},
                         transform=ax.transAxes, ha="center")
 
@@ -163,11 +158,76 @@ class Perceptron:
             # Fit the perceptron for one epoch
             self.fit_epoch(X_train, y_train)
 
+            y_pred = self.predict(X_test)
+
+            y_pred_1 = y_pred[y_test == 0]
+            y_pred_2 = y_pred[y_test == 1]
+
+            # Create the scatter plot for y_test == 0
+            scatter = ax.scatter(range(len(y_pred_1)), y_pred_1, marker='x', c='blue', label='y_test == 0')
+
+            # Create the scatter plot for y_test == 1
+            scatter = ax.scatter(range(len(y_pred_1), len(y_test)), y_pred_2, marker='x', c='red', label='y_test == 1')
+
+            # Set plot limits and title
+            title.set_text(f'Epoch {epoch + 1}')
+
+            if epoch + 1 == self.num_epochs:
+                if self.callback is not None:
+                    self.callback()
+
+        # Return plot elements to be updated
+            return scatter, line, title
+        anim = FuncAnimation(fig, update, frames=self.num_epochs, blit=True, interval=100, repeat=False)
+        return anim
+    
+    def fit_plot3_static(self, X_train, y_train, X_test, y_test, ax, title=None):
+
+        ax.set_title(title)
+
+        self.fit_epoch(X_train, y_train)
+
+        # Predict on X_test
+        y_pred = self.predict(X_test)
+
+        y_pred = self.predict(X_test)
+
+        y_pred_1 = y_pred[y_test == 0]
+        y_pred_2 = y_pred[y_test == 1]
+
+        # Create the scatter plot for y_test == 0
+        scatter = ax.scatter(range(len(y_pred_1)), y_pred_1, marker='x', c='blue', label='y_test == 0')
+
+        # Create the scatter plot for y_test == 1
+        scatter = ax.scatter(range(len(y_pred_1), len(y_test)), y_pred_2, marker='x', c='red', label='y_test == 1')
+
+
+    def fit_plot4(self, X_train, y_train, X_test, y_test, ax, fig, title=None):
+
+        ax.set_xlim([-0.2, 1])
+        ax.set_ylim([-0.2, 1])
+
+        line, = ax.plot([], [])
+
+        ax.set_title(title)
+        title = ax.text(0.1, 0.85, "", bbox={'facecolor': 'w', 'alpha': 0.5, 'pad': 5},
+                        transform=ax.transAxes, ha="center")
+
+        # Define update function
+        def update(epoch):
+
+            # Fit the perceptron for one epoch
+            self.fit_epoch(X_train, y_train)
+
             # Predict on X_test
             y_pred = self.predict(X_test)
 
-            scatter = ax.scatter(X_test[:, 0], X_test[:, 1], c=y_pred)
-
+            correct = y_test == y_pred
+            scatter = ax.scatter(X_test[correct, 0], X_test[correct, 1], marker='o', color='green')
+                    
+            incorrect = y_test != y_pred
+            
+            scatter = ax.scatter(X_test[incorrect, 0], X_test[incorrect, 1], marker='x', color='red')
             # Update line plot
             w1, w2 = self.weights
             b = self.bias
@@ -177,8 +237,37 @@ class Perceptron:
 
             # Set plot limits and title
             title.set_text(f'Epoch {epoch + 1}')
+            if epoch + 1 == self.num_epochs:
+                if self.callback is not None:
+                    self.callback()
 
         # Return plot elements to be updated
             return scatter, line, title
-        anim = FuncAnimation(fig, update, frames=self.num_epochs, blit=True, interval=100)
-        return anim 
+        anim = FuncAnimation(fig, update, frames=self.num_epochs, blit=True, interval=100, repeat=False )
+
+        return anim
+    
+    def fit_plot4_static(self, X_train, y_train, X_test, y_test, ax, title=None):
+
+        ax.set_xlim([-0.2, 1])
+        ax.set_ylim([-0.2, 1])
+
+        ax.set_title(title)
+
+        self.fit_epoch(X_train, y_train)
+
+        # Predict on X_test
+        y_pred = self.predict(X_test)
+
+        correct = y_test == y_pred
+        ax.scatter(X_test[correct, 0], X_test[correct, 1], marker='o', color='green')
+                
+        incorrect = y_test != y_pred
+        
+        ax.scatter(X_test[incorrect, 0], X_test[incorrect, 1], marker='x', color='red')
+        # Update line plot
+        w1, w2 = self.weights
+        b = self.bias
+        x1 = np.linspace(-0.2, 1, 100)
+        x2 = -(w1 * x1 + b) / w2
+        ax.plot(x1, x2)
