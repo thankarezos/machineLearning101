@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
+from algorithms.perceptron import Perceptron
 
 import train as tr
 
 def main():
+    model = Perceptron()
     n = None
     while True:
         try:
@@ -50,8 +52,9 @@ def main():
                     break
             except ValueError:
                 print("Invalid input! Please enter a number.")
-
-        tr.linearSeperated(n, num_epochs=num_epochs, learning_rate=lr)
+        model.learning_rate = lr
+        model.num_epochs = num_epochs
+        tr.linearSeparated(n, model)
 
 
 

@@ -42,8 +42,8 @@ def train(model, X_train, y_train, X_test, y_test):
     model[0].callback = lambda: training_finished(model[0],  X_train, y_train, X_test, y_test)
     per_epoch(model[0], X_train, y_train, X_test, y_test)
 
-perceptron = Perceptron(learning_rate=0.01, num_epochs=100)
-linearSeparated(504, perceptron)
+# perceptron = Perceptron(learning_rate=0.01, num_epochs=100)
+# linearSeparated(504, perceptron)
 
 # adaline = Adaline(learning_rate=0.001, num_epochs=100)
 # linearSeparated(504,adaline)
