@@ -1,7 +1,5 @@
-import time
 from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
-from matplotlib.colors import ListedColormap
 import numpy as np
 
 class Perceptron:
@@ -16,14 +14,16 @@ class Perceptron:
     def activation(self, x):
         return np.where(x >= 0, 1, 0)
     
+    def callbackS(self):
+        if self.callback is not None:
+            self.callback()
 
     def predict(self, X):
         # Compute linear output
         linear_output = np.dot(X, self.weights) + self.bias
-
         # Apply activation function
         y_pred = np.array([self.activation(x) for x in linear_output])
-
+        
         return y_pred
     
     def net_input(self, X):
@@ -83,6 +83,7 @@ class Perceptron:
         ax.set_ylim([-0.2, 1])
 
         ax.set_title(title)
+        print(X_test)
         ax.scatter(X_test[:,0], X_test[:,1], c=y_test)
 
     def fit_plot2(self, X_train, y_train, X_test, ax, fig, title=None):
@@ -119,8 +120,8 @@ class Perceptron:
             # Set plot limits and title
             title.set_text(f'Epoch {epoch+1}')
 
-            # Return plot elements to be updated
             return scatter, line, title
+
         anim = FuncAnimation(fig, update, frames=self.num_epochs, blit=True, interval=100, repeat=False)
         return anim
     
@@ -144,7 +145,7 @@ class Perceptron:
         # Create animation
 
     def fit_plot3(self, X_train, y_train, X_test, y_test, ax, fig, title=None):
-
+        
         line, = ax.plot([], [])
         # ax.set_ylim([-0.1, 1.1])
         
@@ -237,12 +238,14 @@ class Perceptron:
 
             # Set plot limits and title
             title.set_text(f'Epoch {epoch + 1}')
+
             if epoch + 1 == self.num_epochs:
                 if self.callback is not None:
                     self.callback()
 
         # Return plot elements to be updated
             return scatter, line, title
+        
         anim = FuncAnimation(fig, update, frames=self.num_epochs, blit=True, interval=100, repeat=False )
 
         return anim
