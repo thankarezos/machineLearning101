@@ -8,6 +8,7 @@ class Perceptron:
         self.num_epochs = num_epochs
         self.bias = None
         self.callback = callback
+        self.calledBack = False
         self.name = "Perceptron"
         self.trained = 0
         self.weights = None

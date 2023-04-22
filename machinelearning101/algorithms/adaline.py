@@ -13,6 +13,7 @@ class Adaline:
         self.bias = None
         self.callback = None
         self.name = "Adaline"
+        self.trained = 0
     
     def net_input(self, X):
         weighted_sum = np.dot(X, self.weights) + self.bias
@@ -41,6 +42,8 @@ class Adaline:
 
     
     def fit_epoch(self, X, y):
+        self.trained += 1
+
         if self.weights is None:
             self.weights = np.random.rand(X.shape[1])
         if self.bias is None:
