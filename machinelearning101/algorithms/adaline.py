@@ -12,6 +12,7 @@ class Adaline:
         self.lr = learning_rate
         self.bias = None
         self.callback = None
+        self.name = "Adaline"
     
     def net_input(self, X):
         weighted_sum = np.dot(X, self.weights) + self.bias
@@ -59,7 +60,6 @@ class Adaline:
     def get_x2(self, x1, X_test):
         if self.weights is None or self.bias is None:
             raise ValueError("Model has not been trained yet.")
-        
         w1, w2 = self.weights
         b = self.bias
         
