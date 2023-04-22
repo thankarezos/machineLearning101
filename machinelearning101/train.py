@@ -9,6 +9,7 @@ import algorithms.plots as pl
 def training_finished(model, X_train, y_train, X_test, y_test):
     
     plt.close()
+    print(model.trained)
     fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(12, 8))
     fig.suptitle(model.name, fontsize=25)
     fig.text(0.5, 0.92, f"Learning Rate: {model.learning_rate}", ha='center', fontsize=14)
@@ -26,7 +27,8 @@ def per_epoch(model, X_train, y_train, X_test, y_test):
     gs = gridspec.GridSpec(nrows=2, ncols=2, height_ratios=[1, 1], width_ratios=[1, 1])
     axs = [fig.add_subplot(gs[0, 0]), fig.add_subplot(gs[0, 1]), fig.add_subplot(gs[1, :])]
     pl.fit_plot1(model, X_test, y_test, axs[0])
-    anim2 = pl.fit_plot2(model, X_train, y_train, X_test, axs[1], fig)
+    model.fit_epoch(X_train, y_train)
+    anim2 = pl.fit_plot2(model, X_train, y_train, X_test, axs[1], fig, active=True)
     anim3 = pl.fit_plot3(model, X_train, y_train, X_test, y_test, axs[2], fig)
     plt.show()
 
@@ -45,5 +47,5 @@ def train(model, X_train, y_train, X_test, y_test):
 perceptron = Perceptron(learning_rate=0.01, num_epochs=100)
 linearSeparated(504, perceptron)
 
-adaline = Adaline(learning_rate=0.001, num_epochs=100)
-linearSeparated(504,adaline)
+# adaline = Adaline(learning_rate=0.001, num_epochs=100)
+# linearSeparated(504,adaline)

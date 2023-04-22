@@ -1,7 +1,7 @@
 from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
 import numpy as np
-
+count = 0
 
 def plot(model, X_test):
     
@@ -29,7 +29,7 @@ def fit_plot1(model, X_test, y_test, ax, title=None):
     ax.set_title(title)
     ax.scatter(X_test[:,0], X_test[:,1], c=y_test)
 
-def fit_plot2(model, X_train, y_train, X_test, ax, fig, title=None):
+def fit_plot2(model, X_train, y_train, X_test, ax, fig, title=None, active=False):
 
     ax.set_xlim([-0.2, 1])
     ax.set_ylim([-0.2, 1])
@@ -46,7 +46,8 @@ def fit_plot2(model, X_train, y_train, X_test, ax, fig, title=None):
     # Define update function
     def update(epoch):
         # Fit the perceptron for one epoch
-        model.fit_epoch(X_train, y_train)
+        if model.trained <= epoch and active:
+            model.fit_epoch(X_train, y_train)
 
         # Predict on X_test
         y_pred = model.predict(X_test)
@@ -59,7 +60,7 @@ def fit_plot2(model, X_train, y_train, X_test, ax, fig, title=None):
         line.set_data(x1, x2)
 
         # Set plot limits and title
-        title.set_text(f'Epoch {epoch+1}')
+        title.set_text(f'Epoch {model.trained + 1}')
 
         return scatter, line, title
 
@@ -82,18 +83,20 @@ def fit_plot2_static(model, X_test, ax, title=None):
 
     ax.plot(x1, x2)
 
-def fit_plot3(model, X_train, y_train, X_test, y_test, ax, fig, title=None):
+def fit_plot3(model, X_train, y_train, X_test, y_test, ax, fig, title=None, active=False):
     
     line, = ax.plot([], [])
 
     ax.set_title(title)
     title = ax.text(0.1, 0.85, "", bbox={'facecolor': 'w', 'alpha': 0.5, 'pad': 5},
                     transform=ax.transAxes, ha="center")
+    
 
     # Define update function
     def update(epoch):
-        # Fit the perceptron for one epoch
-        model.fit_epoch(X_train, y_train)
+
+        if model.trained <= epoch and active:
+            model.fit_epoch(X_train, y_train)
 
         y_pred = model.predict(X_test)
 
@@ -107,7 +110,7 @@ def fit_plot3(model, X_train, y_train, X_test, y_test, ax, fig, title=None):
         scatter = ax.scatter(range(len(y_pred_1), len(y_test)), y_pred_2, marker='x', c='red', label='y_test == 1')
 
         # Set plot limits and title
-        title.set_text(f'Epoch {epoch + 1}')
+        title.set_text(f'Epoch {model.trained + 1}')
 
         if epoch + 1 == model.num_epochs:
             if model.callback is not None:
@@ -121,8 +124,6 @@ def fit_plot3(model, X_train, y_train, X_test, y_test, ax, fig, title=None):
 def fit_plot3_static(model, X_train, y_train, X_test, y_test, ax, title=None):
 
     ax.set_title(title)
-
-    model.fit_epoch(X_train, y_train)
 
     # Predict on X_test
     y_pred = model.predict(X_test)
@@ -154,7 +155,6 @@ def fit_plot4(model, X_train, y_train, X_test, y_test, ax, fig, title=None):
     def update(epoch):
 
         # Fit the perceptron for one epoch
-        model.fit_epoch(X_train, y_train)
 
         # Predict on X_test
         y_pred = model.predict(X_test)
@@ -171,7 +171,9 @@ def fit_plot4(model, X_train, y_train, X_test, y_test, ax, fig, title=None):
         line.set_data(x1, x2)
 
         # Set plot limits and title
-        title.set_text(f'Epoch {epoch + 1}')
+        title.set_text(f'Epoch {model.trained + 1}')
+
+        
 
         if epoch + 1 == model.num_epochs:
             if model.callback is not None:
@@ -190,8 +192,6 @@ def fit_plot4_static(model, X_train, y_train, X_test, y_test, ax, title=None):
     ax.set_ylim([-0.2, 1])
 
     ax.set_title(title)
-
-    model.fit_epoch(X_train, y_train)
 
     # Predict on X_test
     y_pred = model.predict(X_test)

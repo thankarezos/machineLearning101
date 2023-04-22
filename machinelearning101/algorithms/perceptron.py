@@ -6,10 +6,11 @@ class Perceptron:
     def __init__(self, learning_rate=0.1, num_epochs=100, callback=None):
         self.learning_rate = learning_rate
         self.num_epochs = num_epochs
-        self.weights = None
         self.bias = None
         self.callback = callback
         self.name = "Perceptron"
+        self.trained = 0
+        self.weights = None
 
     def activation(self, x):
         return np.where(x >= 0, 1, 0)
@@ -24,10 +25,9 @@ class Perceptron:
         return y_pred
     
     def fit(self, X, y):
-        # Initialize weights and bias to 0
+
         self.weights = np.random.rand(X.shape[1])
         self.bias = 0
-
         # Train the perceptron
         for epoch in range(self.num_epochs):
             for i in range(X.shape[0]):
@@ -40,6 +40,7 @@ class Perceptron:
                 self.bias += update
     
     def fit_epoch(self, X, y):
+        self.trained += 1
         # Initialize weights and bias to 0
         if self.weights is None:
             self.weights = np.random.rand(X.shape[1])
