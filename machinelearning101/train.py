@@ -40,4 +40,4 @@ def linearSeperated(n, learning_rate, num_epochs):
     per_epoch(perceptron[0], X_train, y_train, X_test, y_test)
 
 
-linearSeperated(504, 0.1, 100)
+linearSeperated(504, 0.01, 100)

@@ -2,74 +2,73 @@ from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
 import numpy as np
 
-class Perceptron:
-    def __init__(self, learning_rate=0.1, num_epochs=100, callback=None):
+    
+
+class Adaline:
+    def __init__(self, learning_rate=0.05, num_epochs=100, callback=None):
         self.learning_rate = learning_rate
         self.num_epochs = num_epochs
         self.weights = None
+        self.lr = learning_rate
         self.bias = None
-        self.callback = callback
+        self.callback = None
 
-    def activation(self, x):
-        return np.where(x >= 0, 1, 0)
+    def net_input(self, X):
+        return np.dot(X, self.weights) + self.bias
+
+    def activation(self, X):
+        return X
     
-
     def predict(self, X):
-        # Compute linear output
-        linear_output = np.dot(X, self.weights) + self.bias
-        # Apply activation function
-        y_pred = np.array([self.activation(x) for x in linear_output])
-        
-        return y_pred
-    
+        X = (X - np.mean(X, axis=0)) / np.std(X, axis=0)
+        netinput = self.net_input(X)
+        return np.sign(netinput)
+
     def fit(self, X, y):
+        X = (X - np.mean(X, axis=0)) / np.std(X, axis=0)
         # Initialize weights and bias to 0
-        self.weights = np.random.rand(X.shape[1])
+        self.weights = np.random.randn(X.shape[1])
         self.bias = 0
 
-        # Train the perceptron
-        for epoch in range(self.num_epochs):
-            for i in range(X.shape[0]):
-                linear_output = np.dot(X[i], self.weights) + self.bias
-
-                y_pred = self.activation(linear_output)
-                
-                update = self.learning_rate * (y[i] - y_pred)
-                self.weights += update * X[i]
-                self.bias += update
+        # Train the ADALINE
+        for i in range(self.num_epochs):
+            output = self.activation(self.net_input(X))
+            errors = (y - output)
+            self.weights += self.learning_rate * X.T.dot(errors)
+            self.bias += self.learning_rate * errors.sum()
     
     def fit_epoch(self, X, y):
-        # Initialize weights and bias to 0
+        # Initialize weights and bias to 0 if not already set
+        X = (X - np.mean(X, axis=0)) / np.std(X, axis=0)
         if self.weights is None:
-            self.weights = np.random.rand(X.shape[1])
+            self.weights = np.random.randn(X.shape[1])
         if self.bias is None:
             self.bias = 0
 
-        # Train the perceptron
-        for i in range(X.shape[0]):
-            linear_output = np.dot(X[i], self.weights) + self.bias
-            y_pred = self.activation(linear_output)
-            update = self.learning_rate * (y[i] - y_pred)
-            self.weights += update * X[i]
-            self.bias += update
-            
+        # Train the Adaline for one epoch
+        output = self.net_input(X)
+        errors = (y - output)
+        self.weights += self.learning_rate * X.T.dot(errors)
+        self.bias += self.learning_rate * errors.sum()
+
     def get_x2(self, x1, X_test):
         w1, w2 = self.weights
         b = self.bias
-        x2 = -(w1*x1 + b) / w2
+        x2 = -(w1*(x1-np.mean(X_test[:,0]))/np.std(X_test[:,0]) + b) / w2 * np.std(X_test[:,1]) + np.mean(X_test[:,1])
         return x2
-    
+
+
     def plot(self, X_test):
         
         y_pred = self.predict(X_test)
+        # plt.set_xlim([-0.2, 1])
+        # plt.set_ylim([-0.2, 1])
 
         # Plot the results
         plt.scatter(X_test[:,0], X_test[:,1], c=y_pred)
         x1 = np.linspace(-0.2, 1, 100)
         x2 = self.get_x2(x1, X_test)
 
-        plt.xlim(-0.2, 1)
-        plt.ylim(-0.2, 1)
         plt.plot(x1, x2)
         plt.show()
 
@@ -129,9 +128,11 @@ class Perceptron:
 
         ax.scatter(X_test[:,0], X_test[:,1], c=y_pred)
 
-        x1 = np.linspace(-0.2, 1, 100)
-        x2 = self.get_x2(x1, X_test)
-        ax.plot(x1, x2)
+        # x1 = np.linspace(-0.2, 1, 100)
+        # x2 = self.get_x2(x1, X_test)
+        # print(x2)
+
+        # ax.plot(x1, x2)
 
         # Create animation
 

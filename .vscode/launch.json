@@ -1,11 +1,20 @@
 {
   "version": "0.2.0",
   "configurations": [
+
     {
-      "name": "Train",
+      "name": "Percetron",
       "type": "python",
       "request": "launch",
-      "program": "machinelearning101/train.py",
+      "program": "machinelearning101/perceptron.py",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "Adaline",
+      "type": "python",
+      "request": "launch",
+      "program": "machinelearning101/adaline.py",
       "console": "integratedTerminal",
       "justMyCode": true
     },
