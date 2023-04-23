@@ -11,7 +11,6 @@ class Adaline:
         self.weights = None
         self.lr = learning_rate
         self.bias = None
-        self.callback = None
         self.name = "Adaline"
         self.trained = 0
     

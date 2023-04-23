@@ -7,7 +7,6 @@ class Perceptron:
         self.learning_rate = learning_rate
         self.num_epochs = num_epochs
         self.bias = None
-        self.callback = callback
         self.name = "Perceptron"
         self.trained = 0
         self.weights = None

@@ -27,23 +27,20 @@ def per_epoch(model, X_train, y_train, X_test, y_test):
     axs = [fig.add_subplot(gs[0, 0]), fig.add_subplot(gs[0, 1]), fig.add_subplot(gs[1, :])]
     pl.fit_plot1_static(model, X_test, y_test, axs[0])
     anim2 = pl.fit_plot2(model, X_train, y_train, X_test, axs[1], fig, active=True)
-    anim3 = pl.fit_plot3(model, X_train, y_train, X_test, y_test, axs[2], fig, callback=True)
+    callback = lambda: training_finished(model,  X_train, y_train, X_test, y_test)
+    anim3 = pl.fit_plot3(model, X_train, y_train, X_test, y_test, axs[2], fig, callback=callback)
     plt.show()
     print("test")
 
 def linearSeparated(n, model):
     X = cd.linearSeparated(n)
     X_train, y_train, X_test, y_test = cd.splitData(X)
-    model.callback = lambda: training_finished(model,  X_train, y_train, X_test, y_test)
     per_epoch(model, X_train, y_train, X_test, y_test)
 
-def train(model, X_train, y_train, X_test, y_test):
-    model = [model]
-    model[0].callback = lambda: training_finished(model[0],  X_train, y_train, X_test, y_test)
-    per_epoch(model[0], X_train, y_train, X_test, y_test)
 
-# perceptron = Perceptron(learning_rate=0.01, num_epochs=100)
-# linearSeparated(504, perceptron)
+perceptron = Perceptron(learning_rate=0.01, num_epochs=100)
+linearSeparated(504, perceptron)
+print(perceptron.trained)
 
 # adaline = Adaline(learning_rate=0.001, num_epochs=100)
 # linearSeparated(504,adaline)

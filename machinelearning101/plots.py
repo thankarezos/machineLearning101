@@ -29,7 +29,7 @@ def fit_plot1_static(model, X_test, y_test, ax, title=None):
     ax.set_title(title)
     ax.scatter(X_test[:,0], X_test[:,1], c=y_test)
 
-def fit_plot2(model, X_train, y_train, X_test, ax, fig, title=None, active=False, callback=False):
+def fit_plot2(model, X_train, y_train, X_test, ax, fig, title=None, active=False, callback=None):
 
     ax.set_xlim([-0.2, 1])
     ax.set_ylim([-0.2, 1])
@@ -63,8 +63,8 @@ def fit_plot2(model, X_train, y_train, X_test, ax, fig, title=None, active=False
         title.set_text(f'Epoch {model.trained + 1}')
 
         if epoch + 1 == model.num_epochs and callback:
-            if model.callback is not None:
-                model.callback()
+            if callback is not None:
+                callback()
 
         return scatter, line, title
 
@@ -87,7 +87,7 @@ def fit_plot2_static(model, X_test, ax, title=None):
 
     ax.plot(x1, x2)
 
-def fit_plot3(model, X_train, y_train, X_test, y_test, ax, fig, title=None, active=False, callback=False):
+def fit_plot3(model, X_train, y_train, X_test, y_test, ax, fig, title=None, active=False, callback=None):
     
     line, = ax.plot([], [])
 
@@ -116,9 +116,9 @@ def fit_plot3(model, X_train, y_train, X_test, y_test, ax, fig, title=None, acti
         # Set plot limits and title
         title.set_text(f'Epoch {model.trained + 1}')
 
-        if epoch + 1 == model.num_epochs and callback:
-            if model.callback is not None:
-                model.callback()
+        if epoch + 1 == model.num_epochs:
+            if callback is not None:
+                callback()
 
         # Return plot elements to be updated
         return scatter, line, title
@@ -144,7 +144,7 @@ def fit_plot3_static(model, X_train, y_train, X_test, y_test, ax, title=None):
     scatter = ax.scatter(range(len(y_pred_1), len(y_test)), y_pred_2, marker='x', c='red', label='y_test == 1')
 
 
-def fit_plot4(model, X_train, y_train, X_test, y_test, ax, fig, title=None, active=False, callback=False):
+def fit_plot4(model, X_train, y_train, X_test, y_test, ax, fig, title=None, active=False, callback=None):
 
     ax.set_xlim([-0.2, 1])
     ax.set_ylim([-0.2, 1])
@@ -179,8 +179,8 @@ def fit_plot4(model, X_train, y_train, X_test, y_test, ax, fig, title=None, acti
         
 
         if epoch + 1 == model.num_epochs and callback:
-            if model.callback is not None:
-                model.callback()
+            if callback is not None:
+                callback()
 
     # Return plot elements to be updated
         return scatter, line, title
