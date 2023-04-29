@@ -24,8 +24,8 @@ def nonlinearSeparated(n, model):
     X = cd.nonLinear(n)
     train(model, X)
 
-model = Perceptron(learning_rate=0.01, num_epochs=10)
-# model = Adaline(learning_rate=0.001, num_epochs=100)
+# model = Perceptron(learning_rate=0.01, num_epochs=10)
+model = Adaline(learning_rate=0.001, num_epochs=10)
 # linearSeparated(504, model)
 # nonlinearSeparatedAngle(504, model)
 # nonlinearSeparatedCenter(504, model)

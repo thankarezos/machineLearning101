@@ -226,3 +226,22 @@ def fit_plot5_static(model, X_train, y_train, X_test, y_test, ax, title=None):
     scatter = ax.scatter(range(len(y_test_1), len(y_test)), y_test_2, marker='o', c='blue', label='y_pred == 1', s=50)
     scatter = ax.scatter(range(len(y_pred_1)), y_pred_1, marker='x', c='red', label='y_test == 0', s=10)
     scatter = ax.scatter(range(len(y_pred_1), len(y_pred)), y_pred_2, marker='x', c='red', label='y_test == 1', s=10)
+
+
+def fit_plot6_static(X_train, y_train, X_test, y_test, ax, title=None):
+    ax.set_xlim([-0.2, 1])
+    ax.set_ylim([-0.2, 1])
+    ax.set_title(title)
+
+    # Plot the test data points and the least squares regression line
+    X_train = np.hstack((np.ones((X_train.shape[0], 1)), X_train))
+    beta_hat = np.linalg.inv(X_train.T @ X_train) @ X_train.T @ y_train
+
+    x1 = np.linspace(-0.2, 1, 100)
+    x1_std = (x1 - np.mean(X_test[:, 0])) / np.std(X_test[:, 0])
+    
+    x2 = -(beta_hat[0] + beta_hat[1]*x1_std) / beta_hat[2]
+    x2 = x2 * np.std(X_test[:, 0]) + np.mean(X_test[:, 0])
+    # Plot the test data points and the least squares regression line
+    ax.scatter(X_test[:, 0], X_test[:, 1], c=y_test)
+    ax.plot(x1, x2, color='red')
