@@ -46,8 +46,8 @@ def nonLinearCenter(n):
 
 def nonLinearXOR(n):
     # np.random.seed(0)
-    X_0_1 = np.random.uniform(low=0.4, high=0.3, size=(int(n/2), 2))
-    X_0_2 = np.random.uniform(low=0.7, high=0.9, size=(int(n/2), 2))
+    X_0_1 = np.random.uniform(low=0.4, high=0.3, size=(int(n/4), 2))
+    X_0_2 = np.random.uniform(low=0.7, high=0.9, size=(int(n/4), 2))
     X_0 = np.vstack((X_0_1, X_0_2))
 
     X_1_1 = np.random.uniform(low=[0.7, 0.0], high=[0.9, 0.3], size=(int(n/4), 2))

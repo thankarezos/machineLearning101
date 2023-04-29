@@ -21,22 +21,27 @@ def nonlinearSeparatedCenter(n, model):
     X = cd.nonLinearCenter(n)
     train(model, X)
 
+def nonlinearSeparatedXOR(n, model):
+    X = cd.nonLinearXOR(n)
+    train(model, X)
+
 def nonlinearSeparated(n, model):
     X = cd.nonLinear(n)
 
     train(model, X)
 
-def nonlinearSeparated2(n, model):
-    fig, ax = plt.subplots()
-    X = cd.nonLinear(n)
-    X_train, y_train, X_test, y_test = cd.splitData(X)
-    anim2 = pl.fit_plot2(model, X_train, y_train, X_test, ax, fig, active=True)
-    plt.show()
+# def nonlinearSeparated2(n, model):
+#     fig, ax = plt.subplots()
+#     X = cd.nonLinear(n)
+#     X_train, y_train, X_test, y_test = cd.splitData(X)
+#     anim2 = pl.fit_plot2(model, X_train, y_train, X_test, ax, fig, active=True)
+#     plt.show()
 
-model = Perceptron(learning_rate=0.01, num_epochs=10)
-# model = Adaline(learning_rate=0.01, num_epochs=100)
+# model = Perceptron(learning_rate=0.01, num_epochs=10)
+model = Adaline(learning_rate=0.001, num_epochs=100)
 # nonlinearSeparated2(504, model)
-# linearSeparated(504, model)
+linearSeparated(504, model)
 # nonlinearSeparatedAngle(504, model)
 # nonlinearSeparatedCenter(504, model)
-nonlinearSeparated(504, model)
+# nonlinearSeparatedXOR(504, model)
+# nonlinearSeparated(504, model)

@@ -20,6 +20,7 @@ class Adaline:
     
     def activation(self, X):
         return 1 / (1 + np.exp(-X))
+        # return X
 
     def predict(self, X):
         return np.where(self.activation(self.net_input(X)) >= 0.5, 1, 0)
@@ -63,11 +64,8 @@ class Adaline:
             raise ValueError("self has not been trained yet.")
         w1, w2 = self.weights
         b = self.bias
-        x1 = np.linspace(-0.2, 1, 100)
         
         x2 = -(w1 * x1 + b) / w2
-
-        
 
         return x2
     
@@ -79,8 +77,8 @@ class Adaline:
         fig.text(0.5, 0.92, f"Learning Rate: {self.learning_rate}", ha='center', fontsize=14)
         pl.fit_plot6_static(X_train, y_train, X_test, y_test, axs[0,0])
         pl.fit_plot2_static(self, X_test, X_train, axs[0,1])
-        pl.fit_plot3_static(self, X_test, y_test, axs[1,0])
-        pl.fit_plot5_static(self, X_test, y_test, axs[1,1])
+        pl.fit_plot5_static(self, X_test, y_test, axs[1,0])
+        pl.fit_plot8_static(X_train, y_train, X_test, y_test, axs[1,1])
         plt.show()
 
     def per_epoch(self, X_train, y_train, X_test, y_test, callback=None):

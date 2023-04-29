@@ -88,6 +88,8 @@ def fit_plot2_static(model, X_test, X_train, ax, title=None):
     ax.plot(x1, x2)
 
 def fit_plot3(model, X_train, y_train, X_test, y_test, ax, fig, title=None, active=False, callback=None):
+    # ax.set_xlim([-0.2, 1])
+    # ax.set_ylim([-0.2, 1])
     
     line, = ax.plot([], [])
 
@@ -105,13 +107,14 @@ def fit_plot3(model, X_train, y_train, X_test, y_test, ax, fig, title=None, acti
         y_pred = model.predict(X_test)
 
         y_pred_1 = y_pred[y_test == 0]
+
         y_pred_2 = y_pred[y_test == 1]
 
         # Create the scatter plot for y_test == 0
-        scatter = ax.scatter(range(len(y_pred_1)), y_pred_1, marker='x', c='blue', label='y_test == 0')
+        scatter1 = ax.scatter(range(len(y_pred_1)), y_pred_1, marker='x', c='blue', label='y_test == 0')
 
         # Create the scatter plot for y_test == 1
-        scatter = ax.scatter(range(len(y_pred_1), len(y_test)), y_pred_2, marker='x', c='red', label='y_test == 1')
+        scatter2 = ax.scatter(range(len(y_pred_1), len(y_test)), y_pred_2, marker='x', c='red', label='y_test == 1')
 
         # Set plot limits and title
         title.set_text(f'Epoch {model.trained + 1}')
@@ -121,7 +124,7 @@ def fit_plot3(model, X_train, y_train, X_test, y_test, ax, fig, title=None, acti
                 callback()
 
         # Return plot elements to be updated
-        return scatter, line, title
+        return scatter1, scatter2, line, title
     anim = FuncAnimation(fig, update, frames=model.num_epochs, blit=True, interval=100, repeat=False)
     return anim
 
@@ -138,10 +141,10 @@ def fit_plot3_static(model, X_test, y_test, ax, title=None):
     y_pred_2 = y_pred[y_test == 1]
 
     # Create the scatter plot for y_test == 0
-    scatter = ax.scatter(range(len(y_pred_1)), y_pred_1, marker='x', c='blue', label='y_test == 0')
+    ax.scatter(range(len(y_pred_1)), y_pred_1, marker='x', c='blue', label='y_test == 0')
 
     # Create the scatter plot for y_test == 1
-    scatter = ax.scatter(range(len(y_pred_1), len(y_test)), y_pred_2, marker='x', c='red', label='y_test == 1')
+    ax.scatter(range(len(y_pred_1), len(y_test)), y_pred_2, marker='x', c='red', label='y_test == 1')
 
 
 def fit_plot4(model, X_train, y_train, X_test, y_test, ax, fig, title=None, active=False, callback=None):
@@ -216,20 +219,18 @@ def fit_plot5_static(model, X_test, y_test, ax, title=None):
 
     ax.set_title(title)
     y_pred = model.predict(X_test)
-    y_pred_1 = y_pred[y_test == 0]
-    y_pred_2 = y_pred[y_test == 1]
+    y_pred_1 = y_pred[y_pred == 0]
+    y_pred_2 = y_pred[y_pred == 1]
     y_test_1 = y_test[y_test == 0]
     y_test_2 = y_test[y_test == 1]
-
     # scatter = ax.scatter(range(len(y_test)), y_test, marker='o', facecolors='none', edgecolors='blue', label='y_test', s=20)
-    scatter = ax.scatter(range(len(y_test_1)), y_test_1, marker='o', c='blue', label='y_pred == 0', s=50)
-    scatter = ax.scatter(range(len(y_test_1), len(y_test)), y_test_2, marker='o', c='blue', label='y_pred == 1', s=50)
-    scatter = ax.scatter(range(len(y_pred_1)), y_pred_1, marker='x', c='red', label='y_test == 0', s=10)
-    scatter = ax.scatter(range(len(y_pred_1), len(y_pred)), y_pred_2, marker='x', c='red', label='y_test == 1', s=10)
+    ax.scatter(range(len(y_test_1)), y_test_1, marker='o', c='blue', label='y_pred == 0', s=50)
+    ax.scatter(range(len(y_test_1), len(y_test)), y_test_2, marker='o', c='blue', label='y_pred == 1', s=50)
+    ax.scatter(range(len(y_pred_1)), y_pred_1, marker='x', c='red', label='y_test == 0', s=10)
+    ax.scatter(range(len(y_pred_1), len(y_pred)), y_pred_2, marker='x', c='red', label='y_test == 1', s=10)
 
 
 def fit_plot6_static(X_train, y_train, X_test, y_test, ax, title=None):
-    print()
     ax.set_xlim([-0.2, 1])
     ax.set_ylim([-0.2, 1])
     ax.set_title(title)
@@ -288,3 +289,42 @@ def fit_plot7(model, X_train, y_train, X_test, y_test, ax, fig, title=None, acti
     anim = FuncAnimation(fig, update, frames=model.num_epochs, blit=True, interval=100, repeat=False )
 
     return anim
+
+def fit_plot8_static(X_train, y_train , X_test, y_test, ax, title=None):
+
+    ax.set_xlim([-0.2, 1])
+    ax.set_ylim([-0.2, 1])
+    ax.set_title(title)
+
+
+    # Plot the test data points and the least squares regression line
+    X_train = np.hstack((np.ones((X_train.shape[0], 1)), X_train))
+    beta_hat = np.linalg.inv(X_train.T @ X_train) @ X_train.T @ y_train
+
+    x1 = np.linspace(-0.2, 1, 100)
+    x1_std = (x1 - np.mean(X_test[:, 0])) / np.std(X_test[:, 0])
+
+    x2 = -(beta_hat[0] + beta_hat[1]*x1_std) / beta_hat[2]
+    x2 = x2 * np.std(X_test[:, 0]) + np.mean(X_test[:, 0])
+
+    X_test = np.hstack((np.ones((X_test.shape[0], 1)), X_test))
+    y_pred = X_test @ beta_hat
+    y_pred_binary = np.where(y_pred >= 0.5, 1, 0)
+
+    # Plot the test data points and the least squares regression line
+    ax.scatter(X_test[:, 1], X_test[:, 2], c=y_pred_binary)
+    ax.plot(x1, x2, color='red')
+
+
+    # ax.set_title(title)
+    # y_pred = model.predict(X_test)
+    # y_pred_1 = y_pred[y_test == 0]
+    # y_pred_2 = y_pred[y_test == 1]
+    # y_test_1 = y_test[y_test == 0]
+    # y_test_2 = y_test[y_test == 1]
+
+    # # scatter = ax.scatter(range(len(y_test)), y_test, marker='o', facecolors='none', edgecolors='blue', label='y_test', s=20)
+    # scatter = ax.scatter(range(len(y_test_1)), y_test_1, marker='o', c='blue', label='y_pred == 0', s=50)
+    # scatter = ax.scatter(range(len(y_test_1), len(y_test)), y_test_2, marker='o', c='blue', label='y_pred == 1', s=50)
+    # scatter = ax.scatter(range(len(y_pred_1)), y_pred_1, marker='x', c='red', label='y_test == 0', s=10)
+    # scatter = ax.scatter(range(len(y_pred_1), len(y_pred)), y_pred_2, marker='x', c='red', label='y_test == 1', s=10)
