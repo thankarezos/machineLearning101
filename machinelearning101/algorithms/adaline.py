@@ -61,7 +61,7 @@ class Adaline:
 
     def get_x2(self, x1, X_test):
         if self.weights is None or self.bias is None:
-            raise ValueError("Model has not been trained yet.")
+            raise ValueError("self has not been trained yet.")
         w1, w2 = self.weights
         b = self.bias
         
