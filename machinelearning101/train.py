@@ -18,7 +18,6 @@ def training_finished(model, X_train, y_train, X_test, y_test):
     plt.show()
 
 def per_epoch(model, X_train, y_train, X_test, y_test, callback=None):
-    
     fig = plt.figure(figsize=(12, 8))
     fig.suptitle(model.name, fontsize=25)
     fig.text(0.5, 0.92, f"Learning Rate: {model.learning_rate}", ha='center', fontsize=14)
@@ -35,9 +34,27 @@ def linearSeparated(n, model):
     callback = lambda: training_finished(model,  X_train, y_train, X_test, y_test)
     per_epoch(model, X_train, y_train, X_test, y_test, callback=callback)
 
+def nonlinearSeparatedAngle(n, model):
+    X = cd.nonLinearAngle(n)
+    X_train, y_train, X_test, y_test = cd.splitData(X)
+    callback = lambda: training_finished(model,  X_train, y_train, X_test, y_test)
+    per_epoch(model, X_train, y_train, X_test, y_test, callback=callback)
 
-perceptron = Perceptron(learning_rate=0.01, num_epochs=10)
-linearSeparated(504, perceptron)
+def nonlinearSeparatedCenter(n, model):
+    X = cd.nonLinearCenter(n)
+    X_train, y_train, X_test, y_test = cd.splitData(X)
+    callback = lambda: training_finished(model,  X_train, y_train, X_test, y_test)
+    per_epoch(model, X_train, y_train, X_test, y_test, callback=callback)
 
-# adaline = Adaline(learning_rate=0.001, num_epochs=100)
-# linearSeparated(504,adaline)
+def nonlinearSeparated(n, model):
+    X = cd.nonLinear(n)
+    X_train, y_train, X_test, y_test = cd.splitData(X)
+    callback = lambda: training_finished(model,  X_train, y_train, X_test, y_test)
+    per_epoch(model, X_train, y_train, X_test, y_test, callback=callback)
+
+# model = Perceptron(learning_rate=0.01, num_epochs=10)
+model = Adaline(learning_rate=0.001, num_epochs=100)
+# linearSeparated(504, model)
+# nonlinearSeparatedAngle(504, model)
+# nonlinearSeparatedCenter(504, model)
+nonlinearSeparated(504, model)
