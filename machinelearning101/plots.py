@@ -209,3 +209,20 @@ def fit_plot4_static(model, X_train, y_train, X_test, y_test, ax, title=None):
     x1 = np.linspace(-0.2, 1, 100)
     x2 = model.get_x2(x1, X_test)
     ax.plot(x1, x2)
+    
+def fit_plot5_static(model, X_train, y_train, X_test, y_test, ax, title=None):
+    # ax.set_xlim([-0.2, 1])
+    # ax.set_ylim([-0.2, 1])
+
+    ax.set_title(title)
+    y_pred = model.predict(X_test)
+    y_pred_1 = y_pred[y_test == 0]
+    y_pred_2 = y_pred[y_test == 1]
+    y_test_1 = y_test[y_test == 0]
+    y_test_2 = y_test[y_test == 1]
+
+    # scatter = ax.scatter(range(len(y_test)), y_test, marker='o', facecolors='none', edgecolors='blue', label='y_test', s=20)
+    scatter = ax.scatter(range(len(y_test_1)), y_test_1, marker='o', c='blue', label='y_pred == 0', s=50)
+    scatter = ax.scatter(range(len(y_test_1), len(y_test)), y_test_2, marker='o', c='blue', label='y_pred == 1', s=50)
+    scatter = ax.scatter(range(len(y_pred_1)), y_pred_1, marker='x', c='red', label='y_test == 0', s=10)
+    scatter = ax.scatter(range(len(y_pred_1), len(y_pred)), y_pred_2, marker='x', c='red', label='y_test == 1', s=10)

@@ -14,7 +14,7 @@ def training_finished(model, X_train, y_train, X_test, y_test):
     pl.fit_plot1_static(model, X_test, y_test, axs[0,0])
     pl.fit_plot2_static(model, X_test, axs[0,1])
     pl.fit_plot3_static(model, X_train, y_train, X_test, y_test, axs[1,0])
-    pl.fit_plot4_static(model, X_train, y_train, X_test, y_test, axs[1,1])
+    pl.fit_plot5_static(model, X_train, y_train, X_test, y_test, axs[1,1])
     plt.show()
 
 def per_epoch(model, X_train, y_train, X_test, y_test, callback=None):
@@ -36,8 +36,8 @@ def linearSeparated(n, model):
     per_epoch(model, X_train, y_train, X_test, y_test, callback=callback)
 
 
-# perceptron = Perceptron(learning_rate=0.01, num_epochs=100)
-# linearSeparated(504, perceptron)
+perceptron = Perceptron(learning_rate=0.01, num_epochs=10)
+linearSeparated(504, perceptron)
 
-adaline = Adaline(learning_rate=0.001, num_epochs=100)
-linearSeparated(504,adaline)
+# adaline = Adaline(learning_rate=0.001, num_epochs=100)
+# linearSeparated(504,adaline)
