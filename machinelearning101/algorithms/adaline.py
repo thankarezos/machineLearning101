@@ -1,5 +1,4 @@
-from matplotlib import gridspec, pyplot as plt
-from matplotlib.animation import FuncAnimation
+from matplotlib import pyplot as plt
 import numpy as np
 from . import plots as pl
 
@@ -20,7 +19,7 @@ class Adaline:
         return weighted_sum
     
     def activation(self, X):
-        return X
+        return 1 / (1 + np.exp(-X))
 
     def predict(self, X):
         return np.where(self.activation(self.net_input(X)) >= 0.5, 1, 0)
@@ -59,20 +58,16 @@ class Adaline:
         return cost
 
 
-    def get_x2(self, x1, X_test):
-        if self.weights is None or self.bias is None:
+    def get_x2(self, x1, X_train, X_test):
+        if self.weights is None or self.bias is None: 
             raise ValueError("self has not been trained yet.")
         w1, w2 = self.weights
         b = self.bias
+        x1 = np.linspace(-0.2, 1, 100)
         
-        # standardize x1 using mean and std from training data
-        x1_std = (x1 - np.mean(X_test[:, 0])) / np.std(X_test[:, 0])
-        
-        # compute corresponding x2 value
-        x2 = -(w1 * x1_std + b) / w2
+        x2 = -(w1 * x1 + b) / w2
 
-        # unstandardize x2 using mean and std from training data
-        x2 = x2 * np.std(X_test[:, 0]) + np.mean(X_test[:, 0])
+        
 
         return x2
     
@@ -83,18 +78,18 @@ class Adaline:
         fig.suptitle(self.name, fontsize=25)
         fig.text(0.5, 0.92, f"Learning Rate: {self.learning_rate}", ha='center', fontsize=14)
         pl.fit_plot6_static(X_train, y_train, X_test, y_test, axs[0,0])
-        pl.fit_plot2_static(self, X_test, axs[0,1])
-        pl.fit_plot3_static(self, X_train, y_train, X_test, y_test, axs[1,0])
-        pl.fit_plot5_static(self, X_train, y_train, X_test, y_test, axs[1,1])
+        pl.fit_plot2_static(self, X_test, X_train, axs[0,1])
+        pl.fit_plot3_static(self, X_test, y_test, axs[1,0])
+        pl.fit_plot5_static(self, X_test, y_test, axs[1,1])
         plt.show()
 
     def per_epoch(self, X_train, y_train, X_test, y_test, callback=None):
-        fig = plt.figure(figsize=(12, 8))
+        fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(12, 8))
+
         fig.suptitle(self.name, fontsize=25)
         fig.text(0.5, 0.92, f"Learning Rate: {self.learning_rate}", ha='center', fontsize=14)
-        gs = gridspec.GridSpec(nrows=2, ncols=2, height_ratios=[1, 1], width_ratios=[1, 1])
-        axs = [fig.add_subplot(gs[0, 0]), fig.add_subplot(gs[0, 1]), fig.add_subplot(gs[1, :])]
-        pl.fit_plot1_static(self, X_test, y_test, axs[0])
-        anim2 = pl.fit_plot2(self, X_train, y_train, X_test, axs[1], fig, active=True)
-        anim3 = pl.fit_plot3(self, X_train, y_train, X_test, y_test, axs[2], fig, callback=callback)
+        pl.fit_plot6_static(X_train, y_train, X_test, y_test, axs[0,0])
+        anim2 = pl.fit_plot2(self, X_train, y_train, X_test, axs[0,1], fig, active=True)
+        anim3 = pl.fit_plot3(self, X_train, y_train, X_test, y_test, axs[1,0], fig)
+        anim4 = pl.fit_plot7(self, X_train, y_train, X_test, y_test, axs[1,1], fig, callback=callback)
         plt.show()

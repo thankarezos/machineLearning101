@@ -56,7 +56,7 @@ class Perceptron:
             self.weights += update * X[i]
             self.bias += update
             
-    def get_x2(self, x1, X_test):
+    def get_x2(self, x1, X_test, X_train):
         w1, w2 = self.weights
         b = self.bias
         x2 = -(w1*x1 + b) / w2
@@ -68,10 +68,10 @@ class Perceptron:
         fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(12, 8))
         fig.suptitle(self.name, fontsize=25)
         fig.text(0.5, 0.92, f"Learning Rate: {self.learning_rate}", ha='center', fontsize=14)
-        pl.fit_plot1_static(self, X_test, y_test, axs[0,0])
-        pl.fit_plot2_static(self, X_test, axs[0,1])
-        pl.fit_plot3_static(self, X_train, y_train, X_test, y_test, axs[1,0])
-        pl.fit_plot5_static(self, X_train, y_train, X_test, y_test, axs[1,1])
+        pl.fit_plot1_static(X_test, y_test, axs[0,0])
+        pl.fit_plot2_static(self, X_test, X_train, axs[0,1])
+        pl.fit_plot3_static(self, X_test, y_test, axs[1,0])
+        pl.fit_plot5_static(self, X_test, y_test, axs[1,1])
         plt.show()
 
     def per_epoch(self, X_train, y_train, X_test, y_test, callback=None):
@@ -80,7 +80,7 @@ class Perceptron:
         fig.text(0.5, 0.92, f"Learning Rate: {self.learning_rate}", ha='center', fontsize=14)
         gs = gridspec.GridSpec(nrows=2, ncols=2, height_ratios=[1, 1], width_ratios=[1, 1])
         axs = [fig.add_subplot(gs[0, 0]), fig.add_subplot(gs[0, 1]), fig.add_subplot(gs[1, :])]
-        pl.fit_plot1_static(self, X_test, y_test, axs[0])
+        pl.fit_plot1_static(X_test, y_test, axs[0])
         anim2 = pl.fit_plot2(self, X_train, y_train, X_test, axs[1], fig, active=True)
         anim3 = pl.fit_plot3(self, X_train, y_train, X_test, y_test, axs[2], fig, callback=callback)
         plt.show()

@@ -2,6 +2,7 @@ from matplotlib import pyplot as plt
 from algorithms.perceptron import Perceptron
 from algorithms.adaline import Adaline
 import createDataset as cd
+from algorithms import plots as pl
 
 def train(model, X):
     X_train, y_train, X_test, y_test = cd.splitData(X)
@@ -22,10 +23,19 @@ def nonlinearSeparatedCenter(n, model):
 
 def nonlinearSeparated(n, model):
     X = cd.nonLinear(n)
+
     train(model, X)
 
-# model = Perceptron(learning_rate=0.01, num_epochs=10)
-model = Adaline(learning_rate=0.001, num_epochs=10)
+def nonlinearSeparated2(n, model):
+    fig, ax = plt.subplots()
+    X = cd.nonLinear(n)
+    X_train, y_train, X_test, y_test = cd.splitData(X)
+    anim2 = pl.fit_plot2(model, X_train, y_train, X_test, ax, fig, active=True)
+    plt.show()
+
+model = Perceptron(learning_rate=0.01, num_epochs=10)
+# model = Adaline(learning_rate=0.01, num_epochs=100)
+# nonlinearSeparated2(504, model)
 # linearSeparated(504, model)
 # nonlinearSeparatedAngle(504, model)
 # nonlinearSeparatedCenter(504, model)
