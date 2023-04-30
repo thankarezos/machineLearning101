@@ -230,23 +230,26 @@ def fit_plot5_static(model, X_test, y_test, ax, title=None):
     ax.scatter(range(len(y_pred_1), len(y_pred)), y_pred_2, marker='x', c='red', label='y_test == 1', s=10)
 
 
-def fit_plot6_static(X_train, y_train, X_test, y_test, ax, title=None):
+def fit_plot6_static(X_train, y_train , X_test, y_test, ax, title=None):
+
     ax.set_xlim([-0.2, 1])
     ax.set_ylim([-0.2, 1])
     ax.set_title(title)
+    
 
-    # Plot the test data points and the least squares regression line
     X_train = np.hstack((np.ones((X_train.shape[0], 1)), X_train))
-    beta_hat = np.linalg.inv(X_train.T @ X_train) @ X_train.T @ y_train
+    coeffs, residuals, rank, s = np.linalg.lstsq(X_train, y_train, rcond=None)
+    X_test = np.hstack((np.ones((X_test.shape[0], 1)), X_test))
+    y_pred = X_test @ coeffs
+    # y_pred = sigmoid(y_pred)
+    y_pred_binary = np.where(y_pred >= 0.5, 1, 0)
 
-    x1 = np.linspace(-0.2, 1, 100)
-    x1_std = (x1 - np.mean(X_test[:, 0])) / np.std(X_test[:, 0])
-
-    x2 = -(beta_hat[0] + beta_hat[1]*x1_std) / beta_hat[2]
-    x2 = x2 * np.std(X_test[:, 0]) + np.mean(X_test[:, 0])
-    # Plot the test data points and the least squares regression line
-    ax.scatter(X_test[:, 0], X_test[:, 1], c=y_test)
-    ax.plot(x1, x2, color='red')
+    # Plot the test data points and the decision boundary
+    ax.scatter(X_test[:, 1], X_test[:, 2], c=y_pred_binary)
+    x_vals = np.array(ax.get_xlim())
+    y_vals = -(coeffs[0] - 0.5 + coeffs[1]*x_vals) / coeffs[2]
+    # y_vals = sigmoid(y_vals)
+    ax.plot(x_vals, y_vals, '--')
 
 def fit_plot7(model, X_train, y_train, X_test, y_test, ax, fig, title=None, active=False, callback=None):
     mse_values = []
@@ -290,41 +293,31 @@ def fit_plot7(model, X_train, y_train, X_test, y_test, ax, fig, title=None, acti
 
     return anim
 
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+
+
 def fit_plot8_static(X_train, y_train , X_test, y_test, ax, title=None):
 
-    ax.set_xlim([-0.2, 1])
-    ax.set_ylim([-0.2, 1])
+    # ax.set_xlim([-0.2, 1])
+    # ax.set_ylim([-0.2, 1])
     ax.set_title(title)
+    
 
-
-    # Plot the test data points and the least squares regression line
     X_train = np.hstack((np.ones((X_train.shape[0], 1)), X_train))
-    beta_hat = np.linalg.inv(X_train.T @ X_train) @ X_train.T @ y_train
-
-    x1 = np.linspace(-0.2, 1, 100)
-    x1_std = (x1 - np.mean(X_test[:, 0])) / np.std(X_test[:, 0])
-
-    x2 = -(beta_hat[0] + beta_hat[1]*x1_std) / beta_hat[2]
-    x2 = x2 * np.std(X_test[:, 0]) + np.mean(X_test[:, 0])
-
+    coeffs, residuals, rank, s = np.linalg.lstsq(X_train, y_train, rcond=None)
     X_test = np.hstack((np.ones((X_test.shape[0], 1)), X_test))
-    y_pred = X_test @ beta_hat
+    y_pred = X_test @ coeffs
+    # y_pred = sigmoid(y_pred)
     y_pred_binary = np.where(y_pred >= 0.5, 1, 0)
 
-    # Plot the test data points and the least squares regression line
-    ax.scatter(X_test[:, 1], X_test[:, 2], c=y_pred_binary)
-    ax.plot(x1, x2, color='red')
-
-
-    # ax.set_title(title)
-    # y_pred = model.predict(X_test)
-    # y_pred_1 = y_pred[y_test == 0]
-    # y_pred_2 = y_pred[y_test == 1]
-    # y_test_1 = y_test[y_test == 0]
-    # y_test_2 = y_test[y_test == 1]
-
-    # # scatter = ax.scatter(range(len(y_test)), y_test, marker='o', facecolors='none', edgecolors='blue', label='y_test', s=20)
-    # scatter = ax.scatter(range(len(y_test_1)), y_test_1, marker='o', c='blue', label='y_pred == 0', s=50)
-    # scatter = ax.scatter(range(len(y_test_1), len(y_test)), y_test_2, marker='o', c='blue', label='y_pred == 1', s=50)
-    # scatter = ax.scatter(range(len(y_pred_1)), y_pred_1, marker='x', c='red', label='y_test == 0', s=10)
-    # scatter = ax.scatter(range(len(y_pred_1), len(y_pred)), y_pred_2, marker='x', c='red', label='y_test == 1', s=10)
+    # Plot the test data points and the decision boundary
+    y_pred_1 = y_pred_binary[y_pred_binary == 0]
+    y_pred_2 = y_pred_binary[y_pred_binary == 1]
+    y_test_1 = y_test[y_test == 0]
+    y_test_2 = y_test[y_test == 1]
+    # scatter = ax.scatter(range(len(y_test)), y_test, marker='o', facecolors='none', edgecolors='blue', label='y_test', s=20)
+    ax.scatter(range(len(y_test_1)), y_test_1, marker='o', c='blue', label='y_pred == 0', s=50)
+    ax.scatter(range(len(y_test_1), len(y_test)), y_test_2, marker='o', c='blue', label='y_pred == 1', s=50)
+    ax.scatter(range(len(y_pred_1)), y_pred_1, marker='x', c='red', label='y_test == 0', s=10)
+    ax.scatter(range(len(y_pred_1), len(y_pred)), y_pred_2, marker='x', c='red', label='y_test == 1', s=10)
