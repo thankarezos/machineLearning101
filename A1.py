@@ -16,7 +16,8 @@ def gradient_descent(f, df, x_init, learning_rate, num_iterations):
         x = x - learning_rate * df(x)
     return x
 
-def plot(x):
+def plot():
+    x = np.linspace(-1, 4, 100)
     fig, ax = plt.subplots()
     line, = ax.plot([], [], label='Function f(x)')
     line_df, = ax.plot([], [], label='Derivative df(x)')
@@ -30,16 +31,6 @@ def plot(x):
     ax.set_ylabel("y")
     ax.legend()
 
-    # Define the initialization function
-    def init():
-        line.set_data([], [])
-        line_df.set_data([], [])
-        line_min.set_data([], [])
-        line_roots.set_data([], [])
-        line_roots_df.set_data([], [])
-        return line, line_df, line_min, line_roots, line_roots_df
-
-    # Define the update function
     def update(frame):
         x_min = gradient_descent(f, df, x_init, learning_rate, frame+1)
         x_vals = np.linspace(-1, 4, 100)
@@ -55,22 +46,14 @@ def plot(x):
         return line, line_df, line_min, line_roots, line_roots_df
 
     # Create the animation
-    anim = FuncAnimation(fig, update, frames=num_iterations, init_func=init, blit=True)
+    anim = FuncAnimation(fig, update, frames=num_iterations, blit=True)
 
     # Show the animation
     plt.show()
 
-# Define initial values
 x_init = 10
 learning_rate = 0.01
 num_iterations = 150
 
-# Run Gradient Descent to find the minimum
-x_min = gradient_descent(f, df, x_init, learning_rate, num_iterations)
 
-# Define the x values for plotting
-x = np.linspace(-1, 4, 100)
-
-# Plot the function and the minimum point
-
-plot(x)
+plot()
