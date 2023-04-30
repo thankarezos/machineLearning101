@@ -5,7 +5,7 @@ from . import plots as pl
     
 
 class Adaline:
-    def __init__(self, learning_rate=0.05, num_epochs=100):
+    def __init__(self, learning_rate=0.001, num_epochs=100):
         self.learning_rate = learning_rate
         self.num_epochs = num_epochs
         self.weights = None

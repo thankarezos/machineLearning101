@@ -1,10 +1,29 @@
 # -*- coding: utf-8 -*-
 from algorithms.perceptron import Perceptron
-
+from algorithms.adaline import Adaline
 import train as tr
 
 def main():
-    model = Perceptron()
+    print("1. Percetron\n" +
+    "2. Adaline\n" +
+    "3. Τέλος"
+    )
+    option = None
+    while option not in range(1, 4):
+        try:
+            option = int(input("Επιλέξτε έναν αριθμό από 1 έως 3: "))
+        except ValueError:
+            print("Invalid input! Please enter an integer.")
+    
+    if option == 1:
+        model = Perceptron()
+    elif option == 2:
+        model = Adaline()
+    elif option == 3:
+        return
+    
+    lr = model.learning_rate
+
     n = None
     while True:
         try:
@@ -31,31 +50,42 @@ def main():
             option = int(input("Επιλέξτε έναν αριθμό από 1 έως 6: "))
         except ValueError:
             print("Invalid input! Please enter an integer.")
+    
+    if option == 6:
+        return
+
+    while True:
+        try:
+            num_epochs = int(input("Enter the number of epochs (default=100): ") or 100)
+            if num_epochs <= 0:
+                print("The number of epochs must be a positive integer!")
+            else:
+                break
+        except ValueError:
+            print("Invalid input! Please enter an integer.")
+
+    while True:
+        try:
+            lr = float(input(f"Enter the learning rate (default={lr}): ") or lr)
+            if lr <= 0:
+                print("The learning rate must be a positive number!")
+            else:
+                break
+        except ValueError:
+            print("Invalid input! Please enter a number.")
+    model.learning_rate = lr
+    model.num_epochs = num_epochs
 
     if option == 1:
-        while True:
-            try:
-                num_epochs = int(input("Enter the number of epochs (default=100): ") or 100)
-                if num_epochs <= 0:
-                    print("The number of epochs must be a positive integer!")
-                else:
-                    break
-            except ValueError:
-                print("Invalid input! Please enter an integer.")
-
-        while True:
-            try:
-                lr = float(input("Enter the learning rate (default=0.1): ") or 0.1)
-                if lr <= 0:
-                    print("The learning rate must be a positive number!")
-                else:
-                    break
-            except ValueError:
-                print("Invalid input! Please enter a number.")
-        model.learning_rate = lr
-        model.num_epochs = num_epochs
         tr.linearSeparated(n, model)
-
+    elif option == 2:
+        tr.nonlinearSeparatedAngle(n, model)
+    elif option == 3:
+        tr.nonlinearSeparatedCenter(n, model)
+    elif option == 4:
+        tr.nonlinearSeparatedXOR(n, model)
+    elif option == 5:
+        tr.nonlinearSeparated(n, model)
 
 
 if __name__ == "__main__":
