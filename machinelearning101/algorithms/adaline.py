@@ -19,8 +19,8 @@ class Adaline:
         return weighted_sum
     
     def activation(self, X):
-        return 1 / (1 + np.exp(-X))
-        # return X
+        # return 1 / (1 + np.exp(-X))
+        return X
 
     def predict(self, X):
         return np.where(self.activation(self.net_input(X)) >= 0.5, 1, 0)
@@ -65,7 +65,7 @@ class Adaline:
         w1, w2 = self.weights
         b = self.bias
         
-        x2 = -(w1 * x1 + b) / w2
+        x2 = -(w1 * x1 + b - 0.5) / w2
 
         return x2
     
