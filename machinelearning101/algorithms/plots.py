@@ -88,8 +88,6 @@ def fit_plot2_static(model, X_test, X_train, ax, title=None):
     ax.plot(x1, x2)
 
 def fit_plot3(model, X_train, y_train, X_test, y_test, ax, fig, title=None, active=False, callback=None):
-    # ax.set_xlim([-0.2, 1])
-    # ax.set_ylim([-0.2, 1])
     
     line, = ax.plot([], [])
 
@@ -214,8 +212,6 @@ def fit_plot4_static(model, X_train, X_test, y_test, ax, title=None):
     ax.plot(x1, x2)
     
 def fit_plot5_static(model, X_test, y_test, ax, title=None):
-    # ax.set_xlim([-0.2, 1])
-    # ax.set_ylim([-0.2, 1])
 
     ax.set_title(title)
     y_pred = model.predict(X_test)
@@ -245,7 +241,8 @@ def fit_plot6_static(X_train, y_train , X_test, y_test, ax, title=None):
     y_pred_binary = np.where(y_pred >= 0.5, 1, 0)
 
     # Plot the test data points and the decision boundary
-    ax.scatter(X_test[:, 1], X_test[:, 2], c=y_pred_binary)
+    ax.scatter(X_test[:, 1], X_test[:, 2], c=y_test)
+    # ax.scatter(X_test[:, 1], X_test[:, 2], c=y_pred_binary )
     x_vals = np.array(ax.get_xlim())
     y_vals = -(coeffs[0] - 0.5 + coeffs[1]*x_vals) / coeffs[2]
     # y_vals = sigmoid(y_vals)
@@ -293,14 +290,9 @@ def fit_plot7(model, X_train, y_train, X_test, y_test, ax, fig, title=None, acti
 
     return anim
 
-def sigmoid(z):
-    return 1 / (1 + np.exp(-z))
-
 
 def fit_plot8_static(X_train, y_train , X_test, y_test, ax, title=None):
 
-    # ax.set_xlim([-0.2, 1])
-    # ax.set_ylim([-0.2, 1])
     ax.set_title(title)
     
 

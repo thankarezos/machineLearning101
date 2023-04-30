@@ -30,11 +30,11 @@ def nonlinearSeparated(n, model):
 
     train(model, X)
 
-# model = Perceptron(learning_rate=0.01, num_epochs=10)
+# model = Perceptron(learning_rate=0.01, num_epochs=100)
 model = Adaline(learning_rate=0.001, num_epochs=100)
 # nonlinearSeparated2(504, model)
 # linearSeparated(504, model)
 # nonlinearSeparatedAngle(504, model)
-# nonlinearSeparatedCenter(504, model)
+nonlinearSeparatedCenter(504, model)
 # nonlinearSeparatedXOR(504, model)
-nonlinearSeparated(504, model)
+# nonlinearSeparated(504, model)
