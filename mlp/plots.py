@@ -1,4 +1,5 @@
 import matplotlib
+from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
 import numpy as np
 
@@ -10,6 +11,8 @@ def animation(model, X_train, y_train, X_test, y_test, axs, fig, epoch=1, title=
     ax2 = axs[0,1]
     ax3 = axs[1,0]
     ax4 = axs[1,1]
+    
+
 
     #plot 1
     ax1.set_xlim([-0.2, 1])
@@ -114,16 +117,29 @@ def animation(model, X_train, y_train, X_test, y_test, axs, fig, epoch=1, title=
         title4.set_text(f'Epoch {epoch + 1}')
         error4.set_text(f'Error: {mse:.3f}') 
         return line4, title4, error4
-
-
+    global best_val_score, n_iter_no_change
+    best_val_score = -1
+    n_iter_no_change = 0
+    
 
     def update(epoch):
         model.partial_fit(X_train, y_train, classes=[0, 1])
         scatter2, title2, contour2, acuracy2 = plot2(epoch)
         scatter3_1, scatter3_2, title3 = plot3(epoch)
         line4, title4, error4 = plot4(epoch)
+        val_score = model.score(X_test, y_test)
+        global best_val_score, n_iter_no_change
         
-        if epoch + 1 == epochs:
+        if val_score > best_val_score:
+            best_val_score = val_score
+            n_iter_no_change = 0
+        else:
+            n_iter_no_change += 1
+            if n_iter_no_change >= model.n_iter_no_change:
+                if callback is not None:
+                    callback()
+        
+        if epoch + 1 == epochs or model.score(X_test, y_test) >= 1:
             if callback is not None:
                 callback()
    
