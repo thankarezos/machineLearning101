@@ -6,7 +6,10 @@ import numpy as np
 
 
 
-def animation(model, X_train, y_train, X_test, y_test, axs, fig, epoch=1, title=None, active=False, callback=None):
+def animation(model, X_train, y_train, X_test, y_test, axs, fig, title=None, active=False, callback=None):
+    
+    epoch = model.max_iter
+    
     ax1 = axs[0,0]
     ax2 = axs[0,1]
     ax3 = axs[1,0]
@@ -42,7 +45,6 @@ def animation(model, X_train, y_train, X_test, y_test, axs, fig, epoch=1, title=
     
     #plot 4
     mse_values = []
-    epochs = epoch
     title4 = ax4.text(0.1, 0.85, "", bbox={'facecolor': 'w', 'alpha': 0.5, 'pad': 5},
                 transform=ax4.transAxes, ha="center")
     line4, = ax4.plot([], [])
@@ -108,7 +110,7 @@ def animation(model, X_train, y_train, X_test, y_test, axs, fig, epoch=1, title=
 
         mse = np.mean((y_pred - y_test) ** 2)
         mse_values.append(mse)
-        ax4.set_xlim([0, epochs])
+        ax4.set_xlim([0, model.max_iter])
         ax4.set_ylim([min(mse_values) - min(mse_values) * 0.1 , max(mse_values) + max(mse_values) * 0.1])
 
         line4.set_data(np.arange(len(mse_values)), mse_values)
@@ -127,6 +129,7 @@ def animation(model, X_train, y_train, X_test, y_test, axs, fig, epoch=1, title=
         scatter2, title2, contour2, acuracy2 = plot2(epoch)
         scatter3_1, scatter3_2, title3 = plot3(epoch)
         line4, title4, error4 = plot4(epoch)
+        
         val_score = model.score(X_test, y_test)
         global best_val_score, n_iter_no_change
         
@@ -139,7 +142,7 @@ def animation(model, X_train, y_train, X_test, y_test, axs, fig, epoch=1, title=
                 if callback is not None:
                     callback()
         
-        if epoch + 1 == epochs or model.score(X_test, y_test) >= 1:
+        if epoch + 1 == model.max_iter or model.score(X_test, y_test) >= 1:
             if callback is not None:
                 callback()
    
