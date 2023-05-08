@@ -53,15 +53,11 @@ def animation(model, X_train, y_train, X_test, y_test, axs, fig, title=None, act
 
     def plot2(epoch):
 
-        # Fit the perceptron for one epoch
-        # clf.partial_fit(X_train, y_train)
         y_pred = model.predict(X_test)
         # Predict on X_test
 
         scatter2 = ax2.scatter(X_test[:,0], X_test[:,1], c=y_pred)
 
-        # Update line plot
-        # line.set_data(x1, x2)
 
         x1, x2 = np.meshgrid(np.linspace(-0.2, 1, 100), np.linspace(-0.2, 1, 100))
         X_grid = np.vstack((x1.ravel(), x2.ravel())).T
@@ -130,6 +126,9 @@ def animation(model, X_train, y_train, X_test, y_test, axs, fig, title=None, act
         scatter3_1, scatter3_2, title3 = plot3(epoch)
         line4, title4, error4 = plot4(epoch)
         
+        
+
+        
         val_score = model.score(X_test, y_test)
         global best_val_score, n_iter_no_change
         
@@ -139,11 +138,11 @@ def animation(model, X_train, y_train, X_test, y_test, axs, fig, title=None, act
         else:
             n_iter_no_change += 1
             if n_iter_no_change >= model.n_iter_no_change:
-                if callback is not None:
+                if callback:
                     callback()
         
         if epoch + 1 == model.max_iter or model.score(X_test, y_test) >= 1:
-            if callback is not None:
+            if callback:
                 callback()
    
         return [scatter2, scatter3_1, scatter3_2, title2, title3, title4, contour2, acuracy2, line4, error4]
