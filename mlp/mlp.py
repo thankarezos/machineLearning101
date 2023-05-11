@@ -36,23 +36,23 @@ def train(model, title, X, partial_fit=True):
 
 
     
-def GD(X):
-    clf = MLPClassifier(hidden_layer_sizes=(100,), activation='relu', solver='sgd', max_iter=1000, random_state=0, validation_fraction=0.01, n_iter_no_change=100, learning_rate='constant', learning_rate_init=0.1)
+def GD(X, hidden_layer_sizes=(100,), max_iter=1000, learning_rate_init=0.1):
+    clf = MLPClassifier(hidden_layer_sizes=hidden_layer_sizes, activation='relu', solver='sgd', max_iter=max_iter, random_state=0, validation_fraction=0.01, n_iter_no_change=100, learning_rate='constant', learning_rate_init=learning_rate_init)
     title = "Gradient Descent"
     train(clf, title, X)
 
-def SGD(X):
-    clf = MLPClassifier(hidden_layer_sizes=(100,), activation='relu', solver='sgd', max_iter=1000, random_state=0, validation_fraction=0.01, n_iter_no_change=100, learning_rate="adaptive", learning_rate_init=0.1)
+def SGD(X, hidden_layer_sizes=(100,), max_iter=1000, learning_rate_init=0.1):
+    clf = MLPClassifier(hidden_layer_sizes=hidden_layer_sizes, activation='relu', solver='sgd', max_iter=max_iter, random_state=0, validation_fraction=0.01, n_iter_no_change=100, learning_rate="adaptive", learning_rate_init=learning_rate_init, momentum=0.9)
     title = "Stochastic Gradient Descent"
     train(clf, title, X)
 
-def LBFGS(X):
-    clf = MLPClassifier(hidden_layer_sizes=(100,), activation='relu', solver='lbfgs', max_iter=1000, random_state=0, validation_fraction=0.01, n_iter_no_change=100, learning_rate="adaptive", learning_rate_init=0.1)
+def LBFGS(X, hidden_layer_sizes=(100,), max_iter=1000, learning_rate_init=0.1):
+    clf = MLPClassifier(hidden_layer_sizes=hidden_layer_sizes, activation='relu', solver='lbfgs', max_iter=max_iter, random_state=0, validation_fraction=0.01, n_iter_no_change=100, learning_rate="adaptive", learning_rate_init=learning_rate_init)
     title = "Limited memory Broyden–Fletcher–Goldfarb–Shanno"
     train(clf, title, X, partial_fit=False)
 
-def Adam(X):
-    clf = MLPClassifier(hidden_layer_sizes=(100,), activation='relu', solver='adam', max_iter=1000, random_state=0, validation_fraction=0.01, n_iter_no_change=100, learning_rate="adaptive", learning_rate_init=0.1)
+def Adam(X, hidden_layer_sizes=(100,), max_iter=1000, learning_rate_init=0.1):
+    clf = MLPClassifier(hidden_layer_sizes=hidden_layer_sizes, activation='relu', solver='adam', max_iter=max_iter, random_state=0, validation_fraction=0.01, n_iter_no_change=100, learning_rate="adaptive", learning_rate_init=learning_rate_init)
     title = "Adam"
     train(clf, title, X)
     

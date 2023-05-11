@@ -24,14 +24,14 @@ def main():
     )
 
 
-    option = None
-    while option not in range(1, 7):
+    data = None
+    while data not in range(1, 7):
         try:
-            option = int(input("Επιλέξτε έναν αριθμό από 1 έως 6: "))
+            data = int(input("Επιλέξτε έναν αριθμό από 1 έως 6: "))
         except ValueError:
             print("Invalid input! Please enter an integer.")
     
-    if option == 6:
+    if data == 6:
         return
     num_epochs = 100
 
@@ -57,16 +57,16 @@ def main():
         except ValueError:
             print("Invalid input! Please enter a number.")
 
-    if option == 1:
+    if data == 1:
         X = cd.linearSeparated(n)
-    # elif option == 2:
-    #     tr.nonlinearSeparatedAngle(n, model)
-    # elif option == 3:
-    #     tr.nonlinearSeparatedCenter(n, model)
-    # elif option == 4:
-    #     tr.nonlinearSeparatedXOR(n, model)
-    # elif option == 5:
-    #     tr.nonlinearSeparated(n, model)
+    elif data == 2:
+        X = cd.nonLinearAngle(n)
+    elif data == 3:
+        X = cd.nonLinearCenter(n)
+    elif data == 4:
+        X = cd.nonLinearXOR(n)
+    elif data == 5:
+        X = cd.nonLinear(n)
         
     print("1. GradientDecent\n" +
     "2. Stochastic Gradient Descent\n" +
@@ -84,9 +84,27 @@ def main():
         return
     
     if option == 1:
-        mlp.GD(X)
+        print(data)
+        if data == 1:
+            hidden_layer_sizes=(1,)
+            mlp.GD(X, hidden_layer_sizes=hidden_layer_sizes, max_iter=num_epochs, learning_rate_init=lr)
+        elif data == 2 or data == 4:
+            hidden_layer_sizes=(2,)
+            mlp.GD(X, hidden_layer_sizes=hidden_layer_sizes, max_iter=num_epochs, learning_rate_init=lr)
+        elif data == 3:
+            hidden_layer_sizes=(4,)
+            mlp.GD(X, hidden_layer_sizes=hidden_layer_sizes, max_iter=num_epochs, learning_rate_init=lr)
+        elif data == 5:
+            hidden_layer_sizes=(20,)
+            mlp.GD(X, hidden_layer_sizes=hidden_layer_sizes, max_iter=num_epochs, learning_rate_init=lr)
+        else:
+            mlp.GD(X, max_iter=num_epochs, learning_rate_init=lr)
     elif option == 2:
-        mlp.SGD(X)
+        mlp.SGD(X, max_iter=num_epochs, learning_rate_init=lr)
+    elif option == 3:
+        mlp.LBFGS(X, max_iter=num_epochs, learning_rate_init=lr)
+    elif option == 4:
+        mlp.Adam(X, max_iter=num_epochs, learning_rate_init=lr)
 
 
 

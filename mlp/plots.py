@@ -152,7 +152,7 @@ def animation(model, X_train, y_train, X_test, y_test, axs, fig, title=None, act
    
         return [scatter2, scatter3_1, scatter3_2, title2, title3, title4, contour2, acuracy2, line4, error4]
 
-    anim = FuncAnimation(fig, update, frames=epoch, blit=True, interval=10, repeat=False )
+    anim = FuncAnimation(fig, update, frames=epoch, blit=True, interval=100, repeat=False )
     return anim
 
 def plot1(model, X_train, y_train, X_test, y_test, ax):
