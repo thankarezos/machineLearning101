@@ -1,21 +1,19 @@
 # -*- coding: utf-8 -*-
 import mlp as mlp
+import createDataset as cd
 
 def main():
 
-    
-    # lr = model.learning_rate
-
-    # n = None
-    # while True:
-    #     try:
-    #         n = int(input("Εισάγετε τον αριθμό των σημείων (πρέπει να είναι πολλαπλάσιο του 8): "))
-    #         if n != "" and int(n) % 8 != 0:
-    #             print("Ο αριθμός πρέπει να είναι πολλαπλάσιο του 8. Δοκιμάστε το", ((int(n)//8)+1)*8, "την επόμενη φορά.")
-    #         else:
-    #             break
-    #     except ValueError:
-    #         print("Invalid input! Please enter an integer.")
+    n = None
+    while True:
+        try:
+            n = int(input("Εισάγετε τον αριθμό των σημείων (πρέπει να είναι πολλαπλάσιο του 8): "))
+            if n != "" and int(n) % 8 != 0:
+                print("Ο αριθμός πρέπει να είναι πολλαπλάσιο του 8. Δοκιμάστε το", ((int(n)//8)+1)*8, "την επόμενη φορά.")
+            else:
+                break
+        except ValueError:
+            print("Invalid input! Please enter an integer.")
 
     print("1. Γραμμικά Διαχωρίσιμα Πρότυπα\n" +
     "2. Μη Γραμμικά Διαχωρίσιμα Πρότυπα – Κλάση 0 στη Γωνία\n" +
@@ -35,16 +33,19 @@ def main():
     
     if option == 6:
         return
+    num_epochs = 100
 
     while True:
         try:
-            num_epochs = int(input("Enter the number of epochs (default=100): ") or 100)
+            num_epochs = int(input(f"Enter the number of epochs (default={num_epochs}): ") or num_epochs)
             if num_epochs <= 0:
                 print("The number of epochs must be a positive integer!")
             else:
                 break
         except ValueError:
             print("Invalid input! Please enter an integer.")
+
+    lr = 0.1
 
     while True:
         try:
@@ -57,15 +58,15 @@ def main():
             print("Invalid input! Please enter a number.")
 
     if option == 1:
-        tr.linearSeparated(n, model)
-    elif option == 2:
-        tr.nonlinearSeparatedAngle(n, model)
-    elif option == 3:
-        tr.nonlinearSeparatedCenter(n, model)
-    elif option == 4:
-        tr.nonlinearSeparatedXOR(n, model)
-    elif option == 5:
-        tr.nonlinearSeparated(n, model)
+        X = cd.linearSeparated(n)
+    # elif option == 2:
+    #     tr.nonlinearSeparatedAngle(n, model)
+    # elif option == 3:
+    #     tr.nonlinearSeparatedCenter(n, model)
+    # elif option == 4:
+    #     tr.nonlinearSeparatedXOR(n, model)
+    # elif option == 5:
+    #     tr.nonlinearSeparated(n, model)
         
     print("1. GradientDecent\n" +
     "2. Stochastic Gradient Descent\n" +
@@ -79,6 +80,14 @@ def main():
             option = int(input("Επιλέξτε έναν αριθμό από 1 έως 6: "))
         except ValueError:
             print("Invalid input! Please enter an integer.")
+    if option == 5:
+        return
+    
+    if option == 1:
+        mlp.GD(X)
+    elif option == 2:
+        mlp.SGD(X)
+
 
 
 if __name__ == "__main__":

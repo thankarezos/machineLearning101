@@ -106,7 +106,13 @@ def animation(model, X_train, y_train, X_test, y_test, axs, fig, title=None, act
         mse = np.mean((y_pred - y_test) ** 2)
         mse_values.append(mse)
         ax4.set_xlim([0, model.max_iter])
-        ax4.set_ylim([min(mse_values) - min(mse_values) * 0.1 , max(mse_values) + max(mse_values) * 0.1])
+        ax4.margins(y=0.1)
+
+        line4.set_data(np.arange(len(mse_values)), mse_values)
+
+        # Let Matplotlib autoscale the y-axis based on the data
+        ax4.relim()
+        ax4.autoscale_view()
 
         line4.set_data(np.arange(len(mse_values)), mse_values)
 
@@ -140,7 +146,7 @@ def animation(model, X_train, y_train, X_test, y_test, axs, fig, title=None, act
                 if callback:
                     callback()
         
-        if epoch + 1 == model.max_iter or model.score(X_test, y_test) >= 1:
+        if epoch + 1 == model.max_iter or model.score(X_test, y_test) >= 1 and epoch > 10:
             if callback:
                 callback()
    
