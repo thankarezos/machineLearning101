@@ -84,7 +84,6 @@ def main():
         return
     
     if option == 1:
-        print(data)
         if data == 1:
             hidden_layer_sizes=(1,)
             mlp.GD(X, hidden_layer_sizes=hidden_layer_sizes, max_iter=num_epochs, learning_rate_init=lr)
