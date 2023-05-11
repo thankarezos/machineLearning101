@@ -31,12 +31,7 @@ def animation(model, X_train, y_train, X_test, y_test, axs, fig, title=None, act
             transform=ax2.transAxes, ha="center")
     title2 = ax2.text(0.1, 0.85, "", bbox={'facecolor': 'w', 'alpha': 0.5, 'pad': 5},
                     transform=ax2.transAxes, ha="center")
-    
-    x1_empty, x2_empty = np.meshgrid(np.linspace(-0.2, 1, 100), np.linspace(-0.2, 1, 100))
-    y_grid_empty = np.empty((100, 100))
 
-    levels = np.linspace(y_grid_empty.min(), y_grid_empty.max(), 11)
-    contourSet = ax2.contour(x1_empty, x2_empty, y_grid_empty, levels=levels, colors='k')
 
     #plot 3
 
@@ -74,9 +69,13 @@ def animation(model, X_train, y_train, X_test, y_test, axs, fig, title=None, act
 
         if 0.5 >= y_min and 0.5 <= y_max:
             contour2 = ax2.contour(x1, x2, y_grid, levels=[0.5], colors='k')
-            
         else:
-            contour2 = contourSet
+            x = np.linspace(-5, 5, 100)
+            y = np.linspace(-5, 5, 100)
+            X, Y = np.meshgrid(x, y)
+            Z = np.zeros_like(X)
+            levels = np.arange(-1, 1.1, 0.1)
+            contour2 = ax2.contour(X, Y, Z, levels=levels)
 
         # Set plot limits and title
         title2.set_text(f'Epoch {epoch + 1}')
@@ -190,7 +189,7 @@ def plot4(model, X_train, y_train, X_test, y_test, ax):
     y_pred_2 = y_pred[y_pred == 1]
     y_test_1 = y_test[y_test == 0]
     y_test_2 = y_test[y_test == 1]
-    # scatter = ax.scatter(range(len(y_test)), y_test, marker='o', facecolors='none', edgecolors='blue', label='y_test', s=20)
+
     ax.scatter(range(len(y_test_1)), y_test_1, marker='o', c='blue', label='y_pred == 0', s=50)
     ax.scatter(range(len(y_test_1), len(y_test)), y_test_2, marker='o', c='blue', label='y_pred == 1', s=50)
     ax.scatter(range(len(y_pred_1)), y_pred_1, marker='x', c='red', label='y_test == 0', s=10)
