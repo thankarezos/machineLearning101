@@ -41,9 +41,13 @@ for i, (x, neuron) in enumerate(zip(X_test, winning_neurons_test)):
     predicted_labels_test[i] = y_train[np.logical_and(winning_neurons_train[:, 0] == neuron[0], winning_neurons_train[:, 1] == neuron[1])][0]
 
 
+print(winning_neurons_test.shape)
+print(winning_neurons_train.shape)
 # Plot the test data and winning neurons
 plt.scatter(X_test[:, 0], X_test[:, 1], c=predicted_labels_test, cmap='coolwarm', label='Predicted Labels (Test)')
-plt.scatter(winning_neurons_train[:, 0], winning_neurons_train[:, 1], c='green', marker='s', s=100, label='Winning Neurons (Train)')
+for centroid in som.get_weights():
+    plt.scatter(centroid[:, 0], centroid[:, 1], marker='x', 
+                s=40, linewidths=10, color='k', label='centroid')
 
 plt.xlabel('X')
 plt.ylabel('Y')
