@@ -77,7 +77,7 @@ def animation(model, X_train, y_train, X_test, y_test, ax, fig, num_iteration, t
 
 fig, ax = plt.subplots(figsize=(12, 8))
 
-fig.suptitle('SOM', fontsize=16)
+fig.suptitle('Competitive learning', fontsize=16)
 
 anim = animation(som, X_train, y_train, X_test, y_test, ax=ax, fig=fig, num_iteration=num_iterations, active=True, callback=None)
 
