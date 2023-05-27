@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 def animation(model, X_train, y_train, X_test, y_test, ax, fig, num_iteration, title=None, active=False, callback=None):
     ax.set_xlim([-0.2, 1])
     ax.set_ylim([-0.2, 1])
-    title = ax.text(0.1, 0.85, "", bbox={'facecolor': 'w', 'alpha': 0.5, 'pad': 5},
-                    transform=ax.transAxes, ha="center")
+    title = ax.text(0.2, 0.85, "", bbox={'facecolor': 'w', 'alpha': 0.5, 'pad': 5},
+            transform=ax.transAxes, ha="center")
     epochs = num_iteration
     def update(epoch):
 
@@ -39,8 +39,7 @@ def animation(model, X_train, y_train, X_test, y_test, ax, fig, num_iteration, t
             color = colors[i % len(colors)]  # Get a unique color for each centroid
             scatter = ax.scatter(centroid[:, 0], centroid[:, 1], marker='s', s=50, linewidths=10, color=color)
             scatters2.append(scatter)
-        title.set_text(f'Epoch: {epoch + 1}/{epochs}')
-        
+        title.set_text(f'Epoch: {epoch+1}/{epochs}')
         return scatter1, *scatters2, title
 
     anim = FuncAnimation(fig, update, frames=epochs, blit=True, interval=10, repeat=False )
