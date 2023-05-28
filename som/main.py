@@ -78,7 +78,7 @@ def main():
             if num_neurons <= 0:
                 print("The learning rate must be a positive number!")
             elif num_neurons > 8:
-                print("The number of neurons must be less than or equal to 8!")
+                print("The number of neurons must be less than or equal to 7!")
             else:
                 break
         except ValueError:
