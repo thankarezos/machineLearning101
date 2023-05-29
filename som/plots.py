@@ -23,24 +23,39 @@ def animation(model, X_train, y_train, X_test, y_test, ax, fig, num_iteration, t
 
         # Assign class labels to the winning neurons in the training data
         predicted_labels_train = np.zeros(X_train.shape[0])
-        for i, (x, neuron) in enumerate(zip(X_train, winning_neurons_train)):
-            predicted_labels_train[i] = y_train[np.logical_and(winning_neurons_train[:, 0] == neuron[0], winning_neurons_train[:, 1] == neuron[1])][0]
+        try:
+            for i, (x, neuron) in enumerate(zip(X_train, winning_neurons_train)):
+                predicted_labels_train[i] = y_train[np.logical_and(winning_neurons_train[:, 0] == neuron[0], winning_neurons_train[:, 1] == neuron[1])][0]
 
         # Assign class labels to the winning neurons in the test data
-        predicted_labels_test = np.zeros(X_test.shape[0])
-        for i, (x, neuron) in enumerate(zip(X_test, winning_neurons_test)):
-            predicted_labels_test[i] = y_train[np.logical_and(winning_neurons_train[:, 0] == neuron[0], winning_neurons_train[:, 1] == neuron[1])][0]
-
+            predicted_labels_test = np.zeros(X_test.shape[0])
+            for i, (x, neuron) in enumerate(zip(X_test, winning_neurons_test)):
+                predicted_labels_test[i] = y_train[np.logical_and(winning_neurons_train[:, 0] == neuron[0], winning_neurons_train[:, 1] == neuron[1])][0]
+        except IndexError:
+            pass
+        
         scatter1 = ax.scatter(X_test[:, 0], X_test[:, 1], c=predicted_labels_test, cmap='coolwarm', label='Predicted Labels (Test)')
         centroids = model.get_weights()
+
+
         scatters2 = []
-        colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k']
+        # colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k']
         for i, centroid in enumerate(centroids):
-            color = colors[i % len(colors)]  # Get a unique color for each centroid
-            scatter = ax.scatter(centroid[:, 0], centroid[:, 1], marker='s', s=50, linewidths=10, color=color)
+            # color = colors[i % len(colors)]  # Get a unique color for each centroid
+            scatter = ax.scatter(centroid[:, 0], centroid[:, 1], marker='s', s=20, linewidths=10, color='red')
             scatters2.append(scatter)
+
+        scatters3 = []   
+        for x in X_train:
+            i, y = model.winner(x)
+            winner = model.get_weights()[i, y]
+            scatter = ax.scatter(winner[0], winner[1], marker='s', s=20, linewidths=10, color='green')
+            scatters3.append(scatter)
+        
+
         title.set_text(f'Epoch: {epoch+1}/{epochs}')
-        return scatter1, *scatters2, title
+        return scatter1, *scatters2, title, *scatters3
+        # return *scatter1, title,
 
     anim = FuncAnimation(fig, update, frames=epochs, blit=True, interval=10, repeat=False )
     return anim

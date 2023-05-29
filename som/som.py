@@ -15,7 +15,7 @@ def som(X, num_neurons, num_iterations, learning_rate):
     map_size = (num_neurons, num_neurons)
 
     # Create the SOM object
-    som = MiniSom(*map_size, X_train.shape[1], sigma=0.3, learning_rate=learning_rate)
+    som = MiniSom(*map_size, X_train.shape[1], learning_rate=learning_rate, neighborhood_function='gaussian')
 
     # Initialize the weights
     som.random_weights_init(X_train)
