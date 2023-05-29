@@ -38,6 +38,8 @@ def animation(model, X_train, y_train, X_test, y_test, ax, fig, num_iteration, t
         centroids = model.get_weights()
 
 
+
+
         scatters2 = []
         # colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k']
         for i, centroid in enumerate(centroids):
