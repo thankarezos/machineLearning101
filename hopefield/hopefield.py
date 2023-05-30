@@ -1,4 +1,6 @@
+import asyncio
 import numpy as np
+import patterns as pt
 
 class HopfieldNetwork:
     def __init__(self, num_neurons):
@@ -17,16 +19,31 @@ class HopfieldNetwork:
 
     def predict(self, pattern, max_iterations=100):
         pattern = np.array(pattern)
-        pattern = pattern.reshape((self.num_neurons, 1))
+        pattern = pattern.reshape((self.num_neurons - 7, 1))
 
         for _ in range(max_iterations):
-            output = np.dot(self.weights, pattern)
+            # output = np.dot(self.weights, pattern)
+            output = np.dot(self.weights[:70, :70], pattern) 
             output[output >= 0] = 1
             output[output < 0] = -1
 
             if np.array_equal(output, pattern):
                 return output.flatten().tolist()
             pattern = output
+        
+    async def predict_async(self, pattern, max_iterations=100):
+        pattern = np.array(pattern)
+        pattern = pattern.reshape((self.num_neurons - 7, 1))
+
+        for _ in range(max_iterations):
+            output = np.dot(self.weights[:70, :70], pattern) 
+            output[output >= 0] = 1
+            output[output < 0] = -1
+
+            if np.array_equal(output, pattern):
+                return output.flatten().tolist()
+            pattern = output
+            await asyncio.sleep(0)  # Allow other tasks to run
 
 def print_pattern(pattern):
     for row in pattern:
@@ -40,69 +57,36 @@ def print_pattern(pattern):
 
     return None
 
-# Example usage
-pattern_5 = np.array([[-1, -1, -1, -1, -1, -1, -1],
-                      [-1, 1, 1, 1, 1, 1, -1],
-                      [-1, 1, -1, -1, -1, -1, -1],
-                      [-1, 1, -1, -1, -1, -1, -1],
-                      [-1, 1, -1, -1, -1, -1, -1],
-                      [-1, 1, 1, 1, 1, 1, -1],
-                      [-1, -1, -1, -1, -1, 1, -1],
-                      [-1, -1, -1, -1, -1, 1, -1],
-                      [-1, -1, -1, -1, -1, 1, -1],
-                      [-1, 1, 1, 1, 1, 1, -1],
-                      [-1, -1, -1, -1, -1, -1, -1]])
 
-pattern_6 = np.array([
-                      [-1, -1, -1, -1, -1, -1, -1],
-                      [-1, 1, 1, 1, 1, 1, -1],
-                      [-1, 1, -1, -1, -1, -1, -1],
-                      [-1, 1, -1, -1, -1, -1, -1],
-                      [-1, 1, -1, -1, -1, -1, -1],
-                      [-1, 1, 1, 1, 1, 1, -1],
-                      [-1, 1, -1, -1, -1, 1, -1],
-                      [-1, 1, -1, -1, -1, 1, -1],
-                      [-1, 1, -1, -1, -1, 1, -1],
-                      [-1, 1, 1, 1, 1, 1, -1],
-                      [-1, -1, -1, -1, -1, -1, -1]])
+patterns = []
 
-pattern_8 = np.array([
-                      [-1, -1, -1, -1, -1, -1, -1],
-                      [-1, 1, 1, 1, 1, 1, -1],
-                      [-1, 1, -1, -1, -1, 1, -1],
-                      [-1, 1, -1, -1, -1, 1, -1],
-                      [-1, 1, -1, -1, -1, 1, -1],
-                      [-1, 1, 1, 1, 1, 1, -1],
-                      [-1, 1, -1, -1, -1, 1, -1],
-                      [-1, 1, -1, -1, -1, 1, -1],
-                      [-1, 1, -1, -1, -1, 1, -1],
-                      [-1, 1, 1, 1, 1, 1, -1],
-                      [-1, -1, -1, -1, -1, -1, -1]])
+for i in range(len(pt.patterns)):
+    if pt.patterns[i] is not None:
+        pattern = pt.patterns[i].tolist()
+        patterns.append(pattern)
 
-
-pattern_9 = np.array([
-                      [-1, -1, -1, -1, -1, -1, -1],
-                      [-1, 1, 1, 1, 1, 1, -1],
-                      [-1, 1, -1, -1, -1, 1, -1],
-                      [-1, 1, -1, -1, -1, 1, -1],
-                      [-1, 1, -1, -1, -1, 1, -1],
-                      [-1, 1,1, 1, 1, 1, -1],
-                      [-1, -1, -1, -1, -1, 1, -1],
-                      [-1, -1, -1, -1, -1, 1, -1],
-                      [-1, -1, -1, -1, -1, 1, -1],
-                      [-1, 1, 1, 1, 1, 1, -1],
-                      [-1, -1, -1, -1, -1, -1, -1]])
-
-
-patterns = [pattern_5.flatten().tolist(), pattern_6.flatten().tolist(), pattern_8.flatten().tolist(), pattern_9.flatten().tolist()]
-
-network = HopfieldNetwork(num_neurons=len(patterns[0]))
+network = HopfieldNetwork(num_neurons=77)
 network.train(patterns)
 
-retrieved_pattern = network.predict(pattern_9)
-if retrieved_pattern:
-    pattern_size = int(np.sqrt(len(retrieved_pattern)))
-    print_pattern(np.array(retrieved_pattern).reshape((11, 7)))
-    # print(np.array(retrieved_pattern).reshape((11, 7)))
+pattern = pt.patternsMod[9]
+print_pattern(pattern)
+
+
+result_sync = network.predict(pattern, max_iterations=200)  # Adjust pattern size to 10x7
+if result_sync:
+    # pattern_size = int(np.sqrt(len(result_sync)))
+    print_pattern(np.array(result_sync).reshape((10, 7)))
 else:
-    print("Pattern retrieval failed.")
+    print("Synchronous pattern retrieval failed.")
+
+# Asynchronous prediction
+async def async_prediction():
+    result_async = await network.predict_async(pattern, max_iterations=200)
+    if result_async:
+        print_pattern(np.array(result_async).reshape((10, 7)))
+    else:
+        print("Asynchronous pattern retrieval failed.")
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(async_prediction())
+loop.close()
