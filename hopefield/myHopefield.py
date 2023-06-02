@@ -19,11 +19,12 @@ class HopfieldNetwork:
 
     def predict(self, pattern, max_iterations=100):
         pattern = np.array(pattern)
-        pattern = pattern.reshape((self.num_neurons - 7, 1))
+        num_neurons = np.prod(pattern.shape)
+        pattern = pattern.reshape((num_neurons, 1))
 
         for _ in range(max_iterations):
             # output = np.dot(self.weights, pattern)
-            output = np.dot(self.weights[:70, :70], pattern) 
+            output = np.dot(self.weights[:num_neurons, :num_neurons], pattern) 
             output[output >= 0] = 1
             output[output < 0] = -1
 
@@ -32,18 +33,20 @@ class HopfieldNetwork:
             pattern = output
         
     async def update_neuron_async(self, neuron, pattern):
-        weighted_sum = np.dot(self.weights[neuron, :70], pattern)
+        num_neurons = np.prod(pattern.shape)
+        weighted_sum = np.dot(self.weights[neuron, :num_neurons], pattern)
         output = np.where(weighted_sum >= 0, 1, -1)
         return np.atleast_1d(output)
 
 
     async def predict_async(self, pattern, max_iterations=100):
         pattern = np.array(pattern)
-        pattern = pattern.reshape((self.num_neurons - 7, 1))
+        num_neurons = np.prod(pattern.shape)
+        pattern = pattern.reshape((num_neurons , 1))
 
         for _ in range(max_iterations):
             tasks = []
-            for neuron in range(self.num_neurons - 7):
+            for neuron in range(num_neurons):
                 task = asyncio.create_task(self.update_neuron_async(neuron, pattern))
                 tasks.append(task)
             outputs = await asyncio.gather(*tasks)
@@ -93,6 +96,34 @@ def print_pattern2(getPatterns):
 
     return None
 
+def print_pattern3(pattern1, pattern2):
+    max_rows = max(len(pattern1), len(pattern2))
+
+    for i in range(max_rows):
+        line = ""
+
+        if i < len(pattern1):
+            row1 = pattern1[i]
+            for element in row1:
+                if element == 1:
+                    line += "  "
+                else:
+                    line += "██"
+            line += "  "  # Add spacing between patterns
+
+        if i < len(pattern2):
+            row2 = pattern2[i]
+            for element in row2:
+                if element == 1:
+                    line += "  "
+                else:
+                    line += "██"
+
+        print(line)
+
+    return None
+
+
 
 patterns = []
 
@@ -112,21 +143,16 @@ def sync_prediction(pattern):
     result_sync = network.predict(pattern, max_iterations=200)  # Adjust pattern size to 10x7
     if result_sync:
         # pattern_size = int(np.sqrt(len(result_sync)))
-        print_pattern(np.array(result_sync).reshape((10, 7)))
+        # print_pattern(np.array(result_sync).reshape((10, 7)))
+        print_pattern3(pattern, np.array(result_sync).reshape((10, 7)))
     else:
         print("Synchronous pattern retrieval failed.")
 
 # Asynchronous prediction
 
-
 async def async_prediction(pattern):
-    async def async_predictionDo():
-        result_async = await network.predict_async(pattern, max_iterations=200)
-        if result_async:
-            print_pattern(np.array(result_async).reshape((10, 7)))
-        else:
-            print("Asynchronous pattern retrieval failed.")
-
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(async_predictionDo())
-    loop.close()
+    result_async = await network.predict_async(pattern, max_iterations=200)
+    if result_async:
+        print_pattern3(pattern, np.array(result_async).reshape((10, 7)))
+    else:
+        print("Asynchronous pattern retrieval failed.")
