@@ -3,3 +3,6 @@
 .VSCodeCounter
 **/__pycache__/
 .vs
+dist
+build
+*.spec
